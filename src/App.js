@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Layout from "./Layout";
 import NewContact from "./pages/NewContact";
 import UpdateProfile from "./pages/UpdateProfile";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -58,7 +59,7 @@ function App() {
             path={route.SETTINGS}
             element={
               <Layout>
-                <Home />
+                <Settings />
               </Layout>
             }
           ></Route>

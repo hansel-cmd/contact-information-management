@@ -14,6 +14,12 @@ export const NAVIGATION = [
     iconFilled: "bi bi-star-fill",
   },
   {
+    path: "/emergency-contacts",
+    name: "Emergency Contacts",
+    icon: "bi bi-bag-plus",
+    iconFilled: "bi bi-bag-plus-fill",
+  },
+  {
     path: "/blocked",
     name: "Blocked",
     icon: "bi bi-slash-circle",

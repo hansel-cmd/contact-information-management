@@ -16,7 +16,7 @@ const BillingAddress = () => {
           </label>
           <input id="street" type="text" className="border-2 p-1" />
         </div>
-        <div className="flex flex-col flex-[3] mb-2">
+        <div className="flex flex-col flex-[4] mb-2">
           <label htmlFor="city" className="mb-1">
             City/Town
           </label>

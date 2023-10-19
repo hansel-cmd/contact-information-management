@@ -1,14 +1,21 @@
 import { useState } from "react";
 import ToolTip from "./Tooltip";
 import TableColumnSettings from "./TableColumnSettings";
+import { useNavigate } from "react-router";
+import { NEW_CONTACT } from "../routes/route";
 
 const ActionTab = ({ handleTableColumnUpdate, availableTableColumns }) => {
   const [showColumnSettings, setShowColumnSettings] = useState(false);
 
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="mb-10 flex gap-5 items-center flex-wrap">
-        <button className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-lg">
+        <button
+          className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-lg"
+          onClick={() => navigate(NEW_CONTACT)}
+        >
           <span>
             <i className="bi bi-plus-lg"></i>
           </span>{" "}

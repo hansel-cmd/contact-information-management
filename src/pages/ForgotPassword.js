@@ -8,8 +8,8 @@ const ForgotPassword = () => {
         <button>
           <Link to={LOGIN}>
           <p className="text-4xl group">
-            <i class="bi bi-arrow-left-circle group-hover:hidden"></i>
-            <i class="bi bi-arrow-left-circle-fill hidden group-hover:block"></i>
+            <i className="bi bi-arrow-left-circle group-hover:hidden"></i>
+            <i className="bi bi-arrow-left-circle-fill hidden group-hover:block"></i>
           </p>
           </Link>
         </button>

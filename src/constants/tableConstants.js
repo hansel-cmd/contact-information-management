@@ -63,13 +63,6 @@ export const ADDRESSES = [
 
 export const TABLE_HEADERS = [
   {
-    key: "selectRow",
-    name: <input type="checkbox" name="data" id="selectRow" />,
-    isVisible: true,
-    rowSpan: 2,
-    colSpan: 1,
-  },
-  {
     key: "firstName",
     name: "First Name",
     isVisible: true,

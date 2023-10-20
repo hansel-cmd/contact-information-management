@@ -3,9 +3,19 @@ import ActionTab from "../components/ActionTab";
 import AddressTableDataRow from "../components/AddressTableDataRow";
 import ActionButton from "../components/ActionButton";
 import TableDataRow from "../components/TableDataRow";
+import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TABLE_HEADERS, ADDRESSES } from "../constants/tableConstants";
+import { useModal } from "../hooks/useModal";
+import { useLocation, useNavigate } from "react-router";
+import { UPDATE_CONTACT } from "../routes/route";
+import {
+  ALL_OPTIONS,
+  FAVORITES_OPTIONS,
+  EMERGENCY_OPTIONS,
+  BLOCK_OPTIONS,
+} from "../constants/options";
 
 const DUMMY = [
   {
@@ -125,6 +135,9 @@ const lookUpParentVisibility = (parentKey, tableHeaders) => {
 };
 
 const Home = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { shouldShowModal, openModal, closeModal } = useModal();
   const [currentPage, setCurrentPage] = useState(1);
   const [availableTableColumns, setAvailableTableColumns] =
     useState(TABLE_HEADERS);
@@ -145,19 +158,71 @@ const Home = () => {
     console.log("handling table column update...");
   };
 
+  const [dataIdsChecked, setDataIdsChecked] = useState([]);
+  const handleCheckBox = (e) => {
+    if (e.target.checked) {
+      if (dataIdsChecked.length === DUMMY.length - 1) {
+        setAreAllChecked(true)
+      }
+      setDataIdsChecked((ids) => [...ids, Number(e.target.value)]);
+
+    } else {
+      const temp = dataIdsChecked.filter((id) => id !== Number(e.target.value));
+      setDataIdsChecked([...temp]);
+    }
+  };
+
+  const [areAllChecked, setAreAllChecked] = useState(false);
+  const handleCheckAll = (e) => {
+    setAreAllChecked(e.target.checked);
+  };
+
+  useEffect(() => {
+    if (areAllChecked) {
+      const ids = DUMMY.map((data) => data.id);
+      setDataIdsChecked(ids);
+    } else {
+      setDataIdsChecked([]);
+    }
+  }, [areAllChecked]);
+
+  const handleSelectedOptions = (method) => {
+    console.log("hello", method);
+  };
+
   return (
     <div>
-      
-      <PageTitle icon={"bi bi-file-earmark-person-fill"} title={"All Contacts"} />
+      <PageTitle
+        icon={"bi bi-file-earmark-person-fill"}
+        title={"All Contacts"}
+      />
       <ActionTab
         handleTableColumnUpdate={handleTableColumnUpdate}
         availableTableColumns={availableTableColumns}
+        dataIdsChecked={dataIdsChecked}
+        handleSelectedOptions={handleSelectedOptions}
+        availableOptions={BLOCK_OPTIONS}
       ></ActionTab>
 
       <div className="overflow-x-auto flex-1">
         <table className="border border-collapse border-slate-400 w-full">
           <thead>
             <tr className="text-center p-2">
+              <th
+                id="checkbox-all"
+                rowSpan={2}
+                colSpan={1}
+                className="border border-collapse border-slate-400 p-2"
+              >
+                <input
+                  type="checkbox"
+                  name="data"
+                  id="selectRow"
+                  onChange={handleCheckAll}
+                  checked={areAllChecked}
+                />
+              </th>
+
               {availableTableColumns.map(
                 (header) =>
                   header.isVisible && (
@@ -194,14 +259,15 @@ const Home = () => {
             {DUMMY.map((data) => {
               return (
                 <tr key={data.id} className="text-center p-2">
-                  {lookUpParentVisibility(
-                    "selectRow",
-                    availableTableColumns
-                  ) && (
-                    <td className="border border-collapse border-slate-400 p-2">
-                      <input type="checkbox" name="data" id={data.id} />
-                    </td>
-                  )}
+                  <td className="border border-collapse border-slate-400 p-2">
+                    <input
+                      type="checkbox"
+                      name="data"
+                      value={data.id}
+                      onChange={handleCheckBox}
+                      checked={dataIdsChecked.includes(data.id)}
+                    />
+                  </td>
                   {lookUpParentVisibility(
                     "firstName",
                     availableTableColumns
@@ -237,12 +303,32 @@ const Home = () => {
                           fn={() => console.log("adding to favorites...")}
                         />
                         <ActionButton
+                          title={"block"}
+                          icon={"bi bi-ban"}
+                          iconFilled={"bi bi-ban-fill"}
+                          defaultColor={"text-orange-700"}
+                          onHoverColor={"text-orange-800"}
+                          fn={() => console.log("blocking contact...")}
+                        />
+                        <ActionButton
+                          title={"emergency"}
+                          icon={"bi bi-bag-plus"}
+                          iconFilled={"bi bi-bag-plus-fill"}
+                          defaultColor={"text-blue-700"}
+                          onHoverColor={"text-blue-800"}
+                          fn={() => console.log("blocking contact...")}
+                        />
+                        <ActionButton
                           title={"edit"}
                           icon={"bi bi-pencil"}
                           iconFilled={"bi bi-pencil-fill"}
                           defaultColor={"text-green-700"}
                           onHoverColor={"text-green-800"}
-                          fn={() => console.log("redirecting to edit page...")}
+                          fn={() =>
+                            navigate(UPDATE_CONTACT.replace(":id", data.id), {
+                              state: location.pathname,
+                            })
+                          }
                         />
                         <ActionButton
                           title={"delete"}
@@ -250,9 +336,7 @@ const Home = () => {
                           iconFilled={"bi bi-trash-fill"}
                           defaultColor={"text-red-700"}
                           onHoverColor={"text-red-800"}
-                          fn={() =>
-                            console.log("showing confirm delete modal...")
-                          }
+                          fn={openModal}
                         />
                       </div>
                     </td>
@@ -302,6 +386,18 @@ const Home = () => {
           />
         </div>
       </div>
+
+      {/* Delete Modal */}
+      <Modal
+        fnContinue={() => {}}
+        fnCancel={closeModal}
+        showModal={shouldShowModal}
+        size={"sm"}
+        body={
+          "Do you really want to delete this contact? This process cannot be undone."
+        }
+        continueLabel="Yes, Delete"
+      ></Modal>
     </div>
   );
 };

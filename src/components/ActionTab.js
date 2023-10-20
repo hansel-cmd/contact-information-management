@@ -4,10 +4,18 @@ import TableColumnSettings from "./TableColumnSettings";
 import { useNavigate } from "react-router";
 import { NEW_CONTACT } from "../routes/route";
 
-const ActionTab = ({ handleTableColumnUpdate, availableTableColumns }) => {
+const ActionTab = ({
+  handleTableColumnUpdate,
+  availableTableColumns,
+  dataIdsChecked,
+  handleSelectedOptions,
+  availableOptions,
+}) => {
   const [showColumnSettings, setShowColumnSettings] = useState(false);
-
   const navigate = useNavigate();
+  const handleSelect = (e) => {
+    handleSelectedOptions(e.target.value);
+  };
 
   return (
     <>
@@ -32,13 +40,14 @@ const ActionTab = ({ handleTableColumnUpdate, availableTableColumns }) => {
         </div>
       </div>
 
-      <div className="mb-2 flex gap-5 items-center justify-between">
+      <div className="mb-2 flex gap-5 items-end justify-between flex-wrap flex-col-reverse sm:flex-row sm:items-center">
         <div className="py-1">
           <select
             name="options"
             id="options"
             className="rounded-md bg-white ring-1 border ring-black ring-opacity-5 focus:outline-none px-2 py-1 me-2"
-            disabled
+            disabled={dataIdsChecked.length === 0}
+            onChange={handleSelect}
           >
             <option
               value="5"
@@ -48,17 +57,19 @@ const ActionTab = ({ handleTableColumnUpdate, availableTableColumns }) => {
             >
               Select Options
             </option>
-            <option value="delete" className="px-4 py-2 text-[16px] block">
-              Delete Items
-            </option>
-            <option value="favorite" className="px-4 py-2 text-[16px] block">
-              Add Favorites
-            </option>
-            <option value="unfavorite" className="px-4 py-2 text-[16px] block">
-              Unfavorite
-            </option>
+            {availableOptions.map((option) => (
+              <option
+                key={option.key}
+                value={option.key}
+                className="px-4 py-2 text-[16px] block"
+              >
+                {option.name}
+              </option>
+            ))}
           </select>
-          <label htmlFor="page_size">Selected 100 items</label>
+          <label htmlFor="page_size">
+            Selected {dataIdsChecked.length} items
+          </label>
         </div>
 
         <div className="relative text-left">

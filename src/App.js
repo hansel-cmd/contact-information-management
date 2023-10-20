@@ -10,6 +10,7 @@ import NewContact from "./pages/NewContact";
 import UpdateProfile from "./pages/UpdateProfile";
 import Settings from "./pages/Settings";
 import Scroller from "./components/Scroller";
+import EditContact from "./pages/EditContact";
 
 function App() {
   return (
@@ -65,6 +66,16 @@ function App() {
             element={
               <Layout>
                 <Settings />
+              </Layout>
+            }
+          ></Route>
+          <Route
+            path={route.UPDATE_CONTACT}
+            element={
+              <Layout>
+                <Scroller>
+                  <EditContact />
+                </Scroller>
               </Layout>
             }
           ></Route>

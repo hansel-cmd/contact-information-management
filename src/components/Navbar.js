@@ -12,9 +12,9 @@ const Navbar = () => {
   };
 
   if (showOffCanvas) {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   } else {
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = "auto";
   }
 
   return (
@@ -28,13 +28,13 @@ const Navbar = () => {
       </div>
 
       <div
-      id="off-canvas"
-        className={`${showOffCanvas ? 'absolute' : 'hidden'} top-0 left-0 min-h-screen w-full`}
+        id="off-canvas"
+        className={`${
+          showOffCanvas ? "absolute" : "hidden"
+        } top-0 left-0 min-h-screen w-full`}
       >
         <div className="absolute min-h-full w-full bg-black opacity-80"></div>
-        <div
-          className={`fixed right-0 top-0 min-h-screen h-full w-96 opacity-100 bg-white overflow-y-auto translate-x-96 transform duration-300 ${showOffCanvas && "translate-x-0"}`}
-        >
+        <div className="fixed right-0 top-0 min-h-screen h-full w-96 opacity-100 bg-white overflow-y-auto transform duration-300">
           <div className="flex bg-white grow items-center px-4 pt-4 pb-2 justify-between border-b-2">
             <h1 className="font-bold text-3xl">Menu</h1>
             <button className="text-2xl" onClick={closeOffCanvas}>
@@ -76,7 +76,9 @@ const Navbar = () => {
             </div>
           </div>
           <div className="px-4">
-          <button className="rounded px-1 py-1 w-full border-2 border-gray-500 hover:bg-gray-500 hover:text-white">Sign Out</button>
+            <button className="rounded px-1 py-1 w-full border-2 border-gray-500 hover:bg-gray-500 hover:text-white">
+              Sign Out
+            </button>
           </div>
           <div className="border-b-2 h-2 w-auto mx-4"></div>
 

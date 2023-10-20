@@ -9,7 +9,7 @@ const NewContact = () => {
       <div className="p-5 shadow-lg border-2 rounded-lg">
         <form action="">
           <section className="flex grow gap-5 flex-wrap">
-            <section className="flex-1 md:border-e-2 px-4">
+            <section className="flex-1 md:border-e-2 sm:px-4">
               <div className="py-4">
                 <fieldset className="border-t-2 border-blue-700">
                   <legend className="ms-4 px-2">Basic information</legend>
@@ -83,14 +83,14 @@ const NewContact = () => {
                   <div className="pt-4">
                     <div className="flex items-center">
                       <input id="favorite" type="checkbox" />
-                      <label htmlFor="favorite" className="ms-4">
-                        Add to Favorites
+                      <label htmlFor="favorite" className="ms-2 text-base">
+                        Add this contact to Favorites
                       </label>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center border-t-2 mt-2 pt-2">
                       <input id="emergency" type="checkbox" />
-                      <label htmlFor="emergency" className="ms-4">
-                        Add to Emergency Contacts
+                      <label htmlFor="emergency" className="ms-2 text-base">
+                        Add this contact to Emergency Contacts
                       </label>
                     </div>
                   </div>

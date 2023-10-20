@@ -9,6 +9,7 @@ import Layout from "./Layout";
 import NewContact from "./pages/NewContact";
 import UpdateProfile from "./pages/UpdateProfile";
 import Settings from "./pages/Settings";
+import Scroller from "./components/Scroller";
 
 function App() {
   return (
@@ -43,7 +44,9 @@ function App() {
             path={route.NEW_CONTACT}
             element={
               <Layout>
-                <NewContact />
+                <Scroller>
+                  <NewContact />
+                </Scroller>
               </Layout>
             }
           ></Route>
@@ -51,7 +54,9 @@ function App() {
             path={route.UPDATE_PROFILE}
             element={
               <Layout>
-                <UpdateProfile />
+                <Scroller>
+                  <UpdateProfile />
+                </Scroller>
               </Layout>
             }
           ></Route>

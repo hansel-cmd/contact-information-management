@@ -26,7 +26,7 @@ const ActionTab = ({ handleTableColumnUpdate, availableTableColumns }) => {
           <i className="bi bi-search text-gray-400 text-lg block cursor-pointer"></i>
           <input
             type="search"
-            className="w-full ms-2 bg-transparent focus:outline-none text-gray-900"
+            className="w-full ms-2 bg-transparent focus:outline-none text-gray-900 border-0 border-transparent focus:ring-0"
             placeholder="Search"
           />
         </div>

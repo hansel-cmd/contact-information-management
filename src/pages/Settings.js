@@ -46,8 +46,20 @@ const Settings = () => {
             </li>
           </ul>
           <div className="border-2 border-t-0 rounded rounded-tl-none rounded-tr-none w-full lg:w-[516px] p-5">
-            {tab === TABS.ACCOUNT && <AccountSettings enableEdit={enableEdit} disableEdit={disableEdit} isEditable={isEditable}/>}
-            {tab === TABS.SECURITY && <SecuritySettings enableEdit={enableEdit} disableEdit={disableEdit} isEditable={isEditable}/>}
+            {tab === TABS.ACCOUNT && (
+              <AccountSettings
+                enableEdit={enableEdit}
+                disableEdit={disableEdit}
+                isEditable={isEditable}
+              />
+            )}
+            {tab === TABS.SECURITY && (
+              <SecuritySettings
+                enableEdit={enableEdit}
+                disableEdit={disableEdit}
+                isEditable={isEditable}
+              />
+            )}
           </div>
         </div>
       </div>

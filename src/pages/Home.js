@@ -147,6 +147,7 @@ const Home = () => {
 
   return (
     <div>
+      
       <PageTitle icon={"bi bi-file-earmark-person-fill"} title={"All Contacts"} />
       <ActionTab
         handleTableColumnUpdate={handleTableColumnUpdate}

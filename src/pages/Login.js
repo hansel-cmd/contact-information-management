@@ -2,13 +2,10 @@ import { Link } from "react-router-dom";
 import { SIGNUP, FORGOT_PASSWORD } from "../routes/route";
 import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { LoginSchema } from "../validations/Login";
 import Api from "../services/api";
+import ErrorMessageContainer from "../components/ErrorMessageContainer";
 
-const LoginSchema = Yup.object().shape({
-  username: Yup.string().required("Username cannot be empty."),
-  password: Yup.string().required("Password cannot be empty."),
-});
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,13 +18,12 @@ const Login = () => {
 
       if (response.status === 200) {
         // Better use redux to handle tokens.
-        localStorage.setItem('token', response.data.access)
-        localStorage.setItem('refresh_token', response.data.refresh)
+        localStorage.setItem("token", response.data.access);
+        localStorage.setItem("refresh_token", response.data.refresh);
       }
 
-      setLoginError('');
+      setLoginError("");
     } catch (err) {
-
       // Invalid credentials.
       if (err?.response?.status === 401) {
         setLoginError("Incorrect Username/Password.");
@@ -43,10 +39,11 @@ const Login = () => {
         <h1 className="text-2xl font-bold mb-4 pt-4">
           Sign in to your account
         </h1>
-        <p className={`text-sm bg-red-400 text-white px-2 py-1 rounded-sm mb-2 ${!loginError && 'hidden'}`}>
-          <i className="bi bi-exclamation-circle me-2"></i>
-          {loginError}
-        </p>
+        <ErrorMessageContainer
+          icon={"bi bi-exclamation-circle"}
+          msg={loginError}
+        />
+
         <Formik
           initialValues={{ username: "", password: "" }}
           onSubmit={handleSubmit}

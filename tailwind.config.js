@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       colors: {
         primary: {
+          400: 'rgb(96 165 250)',
           600: 'rgb(37, 99, 235)',
           700: 'rgb(29, 78, 216)',
         }

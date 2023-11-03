@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import * as routes from "../routes/route";
+import { useDarkMode } from "../hooks/useDarkMode";
 
 const Navbar = () => {
+  const {isDarkMode, toggleDarkMode } = useDarkMode()
   const [showOffCanvas, setShowOffCanvas] = useState(false);
 
   const openOffCanvas = () => {
@@ -20,9 +24,31 @@ const Navbar = () => {
   return (
     <div className="bg-primary-600 fixed top-0 w-full py-2 px-5 flex justify-between z-50">
       <img src="/assets/logo512.png" alt="logo" className="w-[64px] h-[64px]" />
-      <div className="flex items-center" onClick={openOffCanvas}>
+      <div className="flex items-center">
+        <label className="relative inline-flex items-center cursor-pointer me-4 pe-4 border-e-2 border-white">
+          <input
+            type="checkbox"
+            value=""
+            className="sr-only peer"
+            onChange={toggleDarkMode}
+          />
+          <div
+            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+           peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer
+            dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white 
+            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+             after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 
+             after:transition-all dark:border-gray-600 peer-checked:bg-black"
+          ></div>
+          <span className="ml-3 text-sm font-medium text-white dark:text-yellow-500">
+            <i className={isDarkMode ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill'}></i>
+          </span>
+        </label>
         <p className="text-white">Hello, Katarina!</p>
-        <span className="inline-block h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer">
+        <span
+          className="inline-block h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer"
+          onClick={openOffCanvas}
+        >
           <img src="/assets/toArise.jpg" alt="icon" className="object-cover" />
         </span>
       </div>
@@ -88,8 +114,10 @@ const Navbar = () => {
                 <i className="bi bi-file-earmark-person-fill"></i>
               </div>
               <div>
-                <p className="font-semibold">All Contacts</p>
-                <p className="text-sm text-gray-600">List of your contacts</p>
+                <Link to={routes.INDEX} onClick={closeOffCanvas}>
+                  <p className="font-semibold">All Contacts</p>
+                  <p className="text-sm text-gray-600">List of your contacts</p>
+                </Link>
               </div>
             </div>
             <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
@@ -97,10 +125,12 @@ const Navbar = () => {
                 <i className="bi bi-star-fill"></i>
               </div>
               <div>
-                <p className="font-semibold">Favorites</p>
-                <p className="text-sm text-gray-600">
-                  List of your favorite contacts
-                </p>
+                <Link to={routes.FAVORITES} onClick={closeOffCanvas}>
+                  <p className="font-semibold">Favorites</p>
+                  <p className="text-sm text-gray-600">
+                    List of your favorite contacts
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
@@ -108,10 +138,12 @@ const Navbar = () => {
                 <i className="bi bi-bag-plus-fill"></i>
               </div>
               <div>
-                <p className="font-semibold">Emergency Contacts</p>
-                <p className="text-sm text-gray-600">
-                  List of your emergency contacts
-                </p>
+                <Link to={routes.EMERGENCY_CONTACTS} onClick={closeOffCanvas}>
+                  <p className="font-semibold">Emergency Contacts</p>
+                  <p className="text-sm text-gray-600">
+                    List of your emergency contacts
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
@@ -119,10 +151,12 @@ const Navbar = () => {
                 <i className="bi bi-slash-circle-fill"></i>
               </div>
               <div>
-                <p className="font-semibold">Blocked Contacts</p>
-                <p className="text-sm text-gray-600">
-                  List of your blocked contacts
-                </p>
+                <Link to={routes.BLOCKED} onClick={closeOffCanvas}>
+                  <p className="font-semibold">Blocked Contacts</p>
+                  <p className="text-sm text-gray-600">
+                    List of your blocked contacts
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
@@ -130,8 +164,10 @@ const Navbar = () => {
                 <i className="bi bi-plus-circle-fill"></i>
               </div>
               <div>
-                <p className="font-semibold">New Contact</p>
-                <p className="text-sm text-gray-600">Add a new connection</p>
+                <Link to={routes.NEW_CONTACT} onClick={closeOffCanvas}>
+                  <p className="font-semibold">New Contact</p>
+                  <p className="text-sm text-gray-600">Add a new connection</p>
+                </Link>
               </div>
             </div>
             <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
@@ -139,10 +175,12 @@ const Navbar = () => {
                 <i className="bi bi-floppy-fill"></i>
               </div>
               <div>
-                <p className="font-semibold">Update Profile</p>
-                <p className="text-sm text-gray-600">
-                  Update your personal information
-                </p>
+                <Link to={routes.UPDATE_PROFILE} onClick={closeOffCanvas}>
+                  <p className="font-semibold">Update Profile</p>
+                  <p className="text-sm text-gray-600">
+                    Update your personal information
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
@@ -150,10 +188,12 @@ const Navbar = () => {
                 <i className="bi bi-gear-fill"></i>
               </div>
               <div className="flex flex-wrap">
-                <p className="font-semibold">Settings</p>
-                <p className="text-sm text-gray-600">
-                  All about account information and security
-                </p>
+                <Link to={routes.SETTINGS} onClick={closeOffCanvas}>
+                  <p className="font-semibold">Settings</p>
+                  <p className="text-sm text-gray-600">
+                    All about account information and security
+                  </p>
+                </Link>
               </div>
             </div>
           </div>

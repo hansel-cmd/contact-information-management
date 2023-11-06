@@ -42,7 +42,7 @@ const VerifyModal = ({
   const handleOnKeyDown = (e, index) => {
     currentOTPIndex = index;
     if (e.key === "Backspace") {
-      if (activeOTPIndex === 0) return;
+      if (activeOTPIndex === 0 || index === 0) return;
       setActiveOTPIndex(index - 1);
     }
   };

@@ -3,16 +3,18 @@ import { LOGIN } from "../routes/route";
 import VerifyModal from "../components/VerifyModal";
 import { useModal } from "../hooks/useModal";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import {
-  ForgotPasswordSchema,
-  PasswordSchema,
-} from "../validations/ForgotPassword";
+import { ForgotPasswordSchema } from "../validations/ForgotPassword";
 import { useState } from "react";
-import Api from "../services/api";
 import Spinner from "../components/Spinner";
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
+import { usePassword } from "../hooks/usePassword";
+import {
+  sendGETRequest,
+  sendPOSTRequest,
+  sendPUTRequest,
+} from "../services/service";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (
@@ -31,32 +33,13 @@ const ForgotPassword = () => {
   const [emailError, setEmailError] = useState(""); // An error state that is not handled by the Formik.
   const [email, setEmail] = useState("");
   const [verificationError, setVerificationError] = useState("");
-  const [showPasswordObj, setShowPasswordObj] = useState({
-    password: false,
-    confirmPassword: false,
-  });
+  const { showPasswordObj, handleShowPassword, validatePassword } =
+    usePassword();
 
-  const handleShowPassword = (id) => {
-    setShowPasswordObj((current) => ({
-      ...current,
-      [id]: !current[id],
-    }));
-  };
-
-  const validatePassword = (value) => {
-    let error;
-    try {
-      PasswordSchema.validateSync({ password: value });
-    } catch (validationError) {
-      error = validationError.errors[0];
-    }
-    return error;
-  };
-  
   const handleCancel = () => {
     setVerificationError("");
     closeModal();
-  }
+  };
 
   const handleSendOTP = async (values, actions, email) => {
     if (!email) {
@@ -68,9 +51,10 @@ const ForgotPassword = () => {
     }
     setIsGeneratingToken(true);
     try {
-      const response = await Api().post("generate-forgot-password-token/", {
-        email,
-      });
+      const response = await sendPOSTRequest(
+        { email },
+        "generate-forgot-password-token/"
+      );
       if (response.status === 200) {
         setEmail(email);
         openModal();
@@ -87,8 +71,9 @@ const ForgotPassword = () => {
   };
 
   const handleVerifyOTP = async (otp) => {
+    console.log(otp)
     try {
-      const response = await Api().get(
+      const response = await sendGETRequest(
         `validate-forgot-password-token/?email=${email}&token=${otp.join("")}`
       );
       if (response.status === 200) {
@@ -107,11 +92,14 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (values, actions) => {
     try {
-      const response = await Api().put("reset-password/", {
-        email: values.email,
-        password: values.password,
-        confirm_password: values.confirmPassword,
-      });
+      const response = await sendPUTRequest(
+        {
+          email: values.email,
+          password: values.password,
+          confirm_password: values.confirmPassword,
+        },
+        "reset-password/"
+      );
 
       if (response.status === 200) {
         setError("");
@@ -286,7 +274,10 @@ const ForgotPassword = () => {
         fnContinue={handleVerifyOTP}
       ></VerifyModal>
 
-      <Toast message="Your account password has been reset!" showToast={showToast}></Toast>
+      <Toast
+        message="Your account password has been reset!"
+        showToast={showToast}
+      ></Toast>
     </div>
   );
 };

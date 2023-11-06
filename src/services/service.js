@@ -17,3 +17,21 @@ export const sendPUTRequest = async (data, endpoint) => {
     throw err;
   }
 };
+
+export const sendGETRequest = async (endpoint) => {
+  try {
+    const response = await Api().get(endpoint);
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const sendDELETERequest = async (endpoint) => {
+  try {
+    const response = await Api().delete(endpoint);
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};

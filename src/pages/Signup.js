@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { LOGIN } from "../routes/route";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { SignUpSchema, PasswordSchema } from "../validations/Signup";
-import Api from "../services/api";
+import { SignUpSchema } from "../validations/Signup";
 import { useState } from "react";
 import VerifyModal from "../components/VerifyModal";
 import { useModal } from "../hooks/useModal";
@@ -10,7 +9,8 @@ import Spinner from "../components/Spinner";
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
-import { sendPOSTRequest, sendPUTRequest } from "../services/service";
+import { sendDELETERequest, sendPOSTRequest, sendPUTRequest } from "../services/service";
+import { usePassword } from "../hooks/usePassword";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (
@@ -29,32 +29,13 @@ const Signup = () => {
   const [userId, setuserId] = useState(null);
   const [signUpError, setSignUpError] = useState("");
   const [verificationError, setVerificationError] = useState("");
-  const [showPasswordObj, setShowPasswordObj] = useState({
-    password: false,
-    confirmPassword: false,
-  });
-
-  const validatePassword = (value) => {
-    let error;
-    try {
-      PasswordSchema.validateSync({ password: value });
-    } catch (validationError) {
-      error = validationError.errors[0];
-    }
-    return error;
-  };
-
-  const handleShowPassword = (id) => {
-    setShowPasswordObj((current) => ({
-      ...current,
-      [id]: !current[id],
-    }));
-  };
+  const { showPasswordObj, handleShowPassword, validatePassword } =
+    usePassword();
 
   const handleCancel = async () => {
     // delete the user when it was signed up but email was not confirmed
     try {
-      await Api().delete(`users/delete/${userId}`);
+      await sendDELETERequest(`users/delete/${userId}`);
       setVerificationError("");
     } catch (err) {
       formActions.resetForm();

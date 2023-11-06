@@ -47,7 +47,7 @@ const SignUpSchema = Yup.object().shape({
     }),
   password: Yup.string().required("Password is required."),
   confirmPassword: Yup.string()
-    .required("Confirm Password is required")
+    .required("Confirm Password is required.")
     .oneOf([Yup.ref("password"), null], "Passwords must match."),
 });
 

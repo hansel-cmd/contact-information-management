@@ -66,16 +66,22 @@ const VerifyModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeOTPIndex]);
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-
-    await fnContinue(otp);
-    
-    // reset
-    setIsSubmitting(false);
+  const reset = () => {
     setOTP(["", "", "", "", "", ""]);
     setActiveOTPIndex(0);
     currentOTPIndex = 0;
+  }
+
+  const handleCancel = async () => {
+    await fnCancel()
+    reset()
+  }
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    await fnContinue(otp);
+    setIsSubmitting(false)
+    reset()
   }
 
   return (
@@ -88,7 +94,7 @@ const VerifyModal = ({
       <div className="fixed top-12 left-1/2 -translate-x-1/2 min-h-fit w-[480px] rounded-lg opacity-100 bg-white overflow-auto transform duration-300">
         <div className="flex bg-white grow items-center px-4 pt-2 pb-2 justify-between border-b-2">
           <h1 className="font-bold text-xl">{"Enter the 6-digit code"}</h1>
-          <button className="text-2xl" onClick={fnCancel}>
+          <button className="text-2xl" onClick={handleCancel}>
             <i className="bi bi-x-lg"></i>
           </button>
         </div>

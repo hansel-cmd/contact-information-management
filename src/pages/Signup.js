@@ -10,10 +10,12 @@ import Spinner from "../components/Spinner";
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
+import { sendPOSTRequest, sendPUTRequest } from "../services/service";
 
 const Signup = () => {
+  const [formActions, setFormActions] = useState(null);
+  const { showToast, setShowToast, handleShowToast } = useToast(3000);
   const { shouldShowModal, openModal, closeModal } = useModal();
-  const [resetForm, setResetForm] = useState(null)
   const [userId, setuserId] = useState(null);
   const [signUpError, setSignUpError] = useState("");
   const [verificationError, setVerificationError] = useState("");
@@ -21,8 +23,6 @@ const Signup = () => {
     password: false,
     confirmPassword: false,
   });
-
-  const { showToast, setShowToast, handleShowToast } = useToast(3000);
 
   const validatePassword = (value) => {
     let error;
@@ -44,30 +44,13 @@ const Signup = () => {
   const handleCancel = async () => {
     // delete the user when it was signed up but email was not confirmed
     try {
-      await Api().delete()
+      await Api().delete(`users/delete/${userId}`);
+      setVerificationError("");
     } catch (err) {
-      console.log("cancel error", err)
+      formActions.resetForm();
     }
 
     closeModal();
-  };
-
-  const sendPOSTRequest = async (data, endpoint) => {
-    try {
-      const response = await Api().post(endpoint, data);
-      return response;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const sendPUTRequest = async (data, endpoint) => {
-    try {
-      const response = await Api().put(endpoint, data);
-      return response;
-    } catch (err) {
-      throw err;
-    }
   };
 
   const handleSubmit = async (values, actions) => {
@@ -87,9 +70,9 @@ const Signup = () => {
         "send-email-confirmation/"
       );
       if (emailResponse.status === 200) {
-        setResetForm(actions.resetForm)
+        setFormActions(actions);
         setuserId(response.data.id);
-        setSignUpError('');
+        setSignUpError("");
         openModal();
       }
     } catch (err) {
@@ -110,11 +93,11 @@ const Signup = () => {
       );
       if (response.status === 200) {
         closeModal();
-        setVerificationError('');
-        
+        setVerificationError("");
+        formActions.resetForm();
+
         // show success message!
         handleShowToast();
-        if (resetForm === 'function') resetForm();
       }
     } catch (err) {
       if (err?.response?.status === 400) {

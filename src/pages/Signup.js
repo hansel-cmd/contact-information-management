@@ -12,9 +12,19 @@ import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
 import { sendPOSTRequest, sendPUTRequest } from "../services/service";
 
+const modalTitle = "Enter the 6-digit code";
+const modalHeaderBody = (
+  <span>
+    You're almost there! Kindly check your email for a{" "}
+    <strong>6-digit verification code</strong> to complete your account setup.
+  </span>
+);
+const modalFooterBody =
+  "Closing this modal without verifying your email address won't create your account.";
+
 const Signup = () => {
   const [formActions, setFormActions] = useState(null);
-  const { showToast, setShowToast, handleShowToast } = useToast(3000);
+  const { showToast, handleShowToast } = useToast(3000);
   const { shouldShowModal, openModal, closeModal } = useModal();
   const [userId, setuserId] = useState(null);
   const [signUpError, setSignUpError] = useState("");
@@ -95,6 +105,7 @@ const Signup = () => {
         closeModal();
         setVerificationError("");
         formActions.resetForm();
+        setuserId(null);
 
         // show success message!
         handleShowToast();
@@ -278,6 +289,9 @@ const Signup = () => {
       </div>
 
       <VerifyModal
+        modalTitle={modalTitle}
+        modalHeaderBody={modalHeaderBody}
+        modalFooterBody={modalFooterBody}
         errorMessage={verificationError}
         fnCancel={handleCancel}
         showModal={shouldShowModal}
@@ -287,7 +301,6 @@ const Signup = () => {
       <Toast
         message="Your account is successfully created!"
         showToast={showToast}
-        setShowToast={setShowToast}
       />
     </div>
   );

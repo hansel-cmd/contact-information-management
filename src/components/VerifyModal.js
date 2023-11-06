@@ -3,6 +3,10 @@ import Spinner from "./Spinner";
 
 let currentOTPIndex = 0;
 const VerifyModal = ({
+  modalTitle,
+  modalHeaderBody,
+  modalFooterBody,
+  modalButtonTitle,
   errorMessage,
   showModal,
   fnCancel,
@@ -10,12 +14,12 @@ const VerifyModal = ({
   continueLabel = "Continue",
 }) => {
   const inputRefs = [
-    useRef(''),
-    useRef(''),
-    useRef(''),
-    useRef(''),
-    useRef(''),
-    useRef(''),
+    useRef(""),
+    useRef(""),
+    useRef(""),
+    useRef(""),
+    useRef(""),
+    useRef(""),
   ];
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
@@ -70,19 +74,19 @@ const VerifyModal = ({
     setOTP(["", "", "", "", "", ""]);
     setActiveOTPIndex(0);
     currentOTPIndex = 0;
-  }
+  };
 
   const handleCancel = async () => {
-    await fnCancel()
-    reset()
-  }
+    await fnCancel();
+    reset();
+  };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     await fnContinue(otp);
-    setIsSubmitting(false)
-    reset()
-  }
+    setIsSubmitting(false);
+    reset();
+  };
 
   return (
     <div
@@ -93,17 +97,13 @@ const VerifyModal = ({
       <div className="absolute min-h-screen w-full bg-black opacity-80"></div>
       <div className="fixed top-12 left-1/2 -translate-x-1/2 min-h-fit w-[480px] rounded-lg opacity-100 bg-white overflow-auto transform duration-300">
         <div className="flex bg-white grow items-center px-4 pt-2 pb-2 justify-between border-b-2">
-          <h1 className="font-bold text-xl">{"Enter the 6-digit code"}</h1>
+          <h1 className="font-bold text-xl">{modalTitle}</h1>
           <button className="text-2xl" onClick={handleCancel}>
             <i className="bi bi-x-lg"></i>
           </button>
         </div>
         <div className="p-4 mb-2 overflow-y-auto max-h-64">
-          <p className="mb-4">
-            You're almost there! Kindly check your email for a{" "}
-            <strong>6-digit verification code</strong> to complete your account
-            setup.
-          </p>
+          <p className="mb-4">{modalHeaderBody}</p>
           <p className="text-red-600 text-center mb-2">{errorMessage}</p>
           <div className="flex items-center justify-center">
             <div className="flex space-x-4">
@@ -121,9 +121,7 @@ const VerifyModal = ({
               ))}
             </div>
           </div>
-          <p className="mt-4">
-            Closing this modal without verifying your email address won't create your account.
-          </p>
+          <p className="mt-4">{modalFooterBody}</p>
         </div>
         <div className="flex gap-3 justify-end px-4 mb-2">
           <button
@@ -132,7 +130,7 @@ const VerifyModal = ({
             disabled={isSubmitting}
           >
             <Spinner isLoading={isSubmitting} />
-            {isSubmitting ? 'Verifying...' : continueLabel}
+            {isSubmitting ? "Verifying..." : continueLabel}
           </button>
         </div>
       </div>

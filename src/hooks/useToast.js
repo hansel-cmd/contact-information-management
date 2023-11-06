@@ -14,7 +14,6 @@ export const useToast = (delay) => {
 
   return {
     showToast,
-    setShowToast,
     handleShowToast,
   };
 };

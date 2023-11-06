@@ -16,7 +16,29 @@ const SignUpSchema = Yup.object().shape({
     .required("Last Name is required."),
   email: Yup.string()
     .email("Invalid email address.")
-    .required("Email is required."),
+    .required("Email is required.")
+    .test(
+      "Unique Email Address",
+      "Email is already in use.", // <- key, message
+      function (value) {
+        return new Promise((resolve, reject) => {
+          Api()
+            .get(`unique-email/?email=${value}`)
+            .then((res) => {
+              if (res.status === 200) {
+                if ('error' in res.data) {
+                    resolve(false);
+                    return;
+                }
+                resolve(true);
+              }
+            })
+            .catch((error) => {
+              resolve(false);
+            });
+        });
+      }
+    ),
   username: Yup.string()
     .required("Username is required.")
     .matches(/^\S*$/, 'Username should not contain spaces')

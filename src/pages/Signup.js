@@ -7,14 +7,22 @@ import { useState } from "react";
 import VerifyModal from "../components/VerifyModal";
 import { useModal } from "../hooks/useModal";
 import Spinner from "../components/Spinner";
+import ErrorMessageContainer from "../components/ErrorMessageContainer";
+import Toast from "../components/Toast";
+import { useToast } from "../hooks/useToast";
 
 const Signup = () => {
   const { shouldShowModal, openModal, closeModal } = useModal();
+  const [resetForm, setResetForm] = useState(null)
+  const [userId, setuserId] = useState(null);
+  const [signUpError, setSignUpError] = useState("");
   const [verificationError, setVerificationError] = useState("");
   const [showPasswordObj, setShowPasswordObj] = useState({
     password: false,
     confirmPassword: false,
   });
+
+  const { showToast, setShowToast, handleShowToast } = useToast(3000);
 
   const validatePassword = (value) => {
     let error;
@@ -33,29 +41,88 @@ const Signup = () => {
     }));
   };
 
-  const handleCancel = () => {
-    // delete the user, and its emailconfirmationtoken instances
+  const handleCancel = async () => {
+    // delete the user when it was signed up but email was not confirmed
+    try {
+      await Api().delete()
+    } catch (err) {
+      console.log("cancel error", err)
+    }
 
-    closeModal()
-  }
-
-  const handleSubmit = (values, actions) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-        openModal();
-      }, 5000);
-    });
+    closeModal();
   };
 
-  const handleVerify = () => {
-    // verify otp sent
+  const sendPOSTRequest = async (data, endpoint) => {
+    try {
+      const response = await Api().post(endpoint, data);
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  };
 
-    // if sucessful, close the modal.
-    // closeModal()
+  const sendPUTRequest = async (data, endpoint) => {
+    try {
+      const response = await Api().put(endpoint, data);
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  };
 
-    // otherwise, show an error.
-    setVerificationError("The provided 6-digit code is incorrect/invalid.");
+  const handleSubmit = async (values, actions) => {
+    const data = {
+      first_name: values.firstName,
+      last_name: values.lastName,
+      email: values.email,
+      username: values.username,
+      password: values.password,
+      confirm_password: values.confirmPassword,
+    };
+
+    try {
+      const response = await sendPOSTRequest(data, "signup/");
+      const emailResponse = await sendPOSTRequest(
+        { user_id: response.data.id, email: response.data.email },
+        "send-email-confirmation/"
+      );
+      if (emailResponse.status === 200) {
+        setResetForm(actions.resetForm)
+        setuserId(response.data.id);
+        setSignUpError('');
+        openModal();
+      }
+    } catch (err) {
+      console.log("sign up error:", err);
+      setSignUpError("Cannot create an account. Please try again later.");
+      return;
+    }
+  };
+
+  const handleVerify = async (otp) => {
+    try {
+      const response = await sendPUTRequest(
+        {
+          user_id: userId,
+          token: otp.join(""),
+        },
+        "verify-email-confirmation/"
+      );
+      if (response.status === 200) {
+        closeModal();
+        setVerificationError('');
+        
+        // show success message!
+        handleShowToast();
+        if (resetForm === 'function') resetForm();
+      }
+    } catch (err) {
+      if (err?.response?.status === 400) {
+        setVerificationError("The provided 6-digit code is invalid/expired.");
+        return;
+      }
+      setVerificationError("Cannot perform action. Please try again later.");
+    }
   };
 
   return (
@@ -65,6 +132,10 @@ const Signup = () => {
         <p className="mb-4 text-gray-500">
           Enter your information to create your account
         </p>
+        <ErrorMessageContainer
+          icon={"bi bi-exclamation-circle"}
+          msg={signUpError}
+        />
         <Formik
           initialValues={{
             firstName: "",
@@ -230,6 +301,11 @@ const Signup = () => {
         continueLabel={"Verify Email Address"}
         fnContinue={handleVerify}
       ></VerifyModal>
+      <Toast
+        message="Your account is successfully created!"
+        showToast={showToast}
+        setShowToast={setShowToast}
+      />
     </div>
   );
 };

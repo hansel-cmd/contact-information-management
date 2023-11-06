@@ -10,15 +10,15 @@ const VerifyModal = ({
   continueLabel = "Continue",
 }) => {
   const inputRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
+    useRef(''),
+    useRef(''),
+    useRef(''),
+    useRef(''),
+    useRef(''),
+    useRef(''),
   ];
   const [activeOTPIndex, setActiveOTPIndex] = useState(0);
-  const [otp, setOTP] = useState("");
+  const [otp, setOTP] = useState(["", "", "", "", "", ""]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleOnChange = (e) => {
@@ -49,10 +49,13 @@ const VerifyModal = ({
       .getData("text")
       .slice(0, 6 - activeOTPIndex);
     const newOTP = [...otp];
-    for (let i = 0; i < pastedData.length; i++) {
+
+    let i;
+    for (i = 0; i < pastedData.length; i++) {
       newOTP[activeOTPIndex + i] = pastedData[i];
     }
-    setActiveOTPIndex(5);
+
+    setActiveOTPIndex(activeOTPIndex + i);
     setOTP(newOTP);
   };
 
@@ -63,15 +66,16 @@ const VerifyModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeOTPIndex]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    fnContinue();
-
-    setTimeout(() => {
-        setIsSubmitting(false);
-        
-    }, 5000);
+    await fnContinue(otp);
+    
+    // reset
+    setIsSubmitting(false);
+    setOTP(["", "", "", "", "", ""]);
+    setActiveOTPIndex(0);
+    currentOTPIndex = 0;
   }
 
   return (
@@ -95,14 +99,14 @@ const VerifyModal = ({
             setup.
           </p>
           <p className="text-red-600 text-center mb-2">{errorMessage}</p>
-          <div class="flex items-center justify-center">
-            <div class="flex space-x-4">
+          <div className="flex items-center justify-center">
+            <div className="flex space-x-4">
               {Array.from({ length: 6 }).map((_, index) => (
                 <input
                   ref={inputRefs[index]}
                   key={index}
                   type="text"
-                  class="w-12 h-12 border border-gray-300 rounded-md text-center"
+                  className="w-12 h-12 border border-gray-300 rounded-md text-center"
                   onChange={(e) => handleOnChange(e, index)}
                   onKeyDown={(e) => handleOnKeyDown(e, index)}
                   onPaste={handleOnPaste}

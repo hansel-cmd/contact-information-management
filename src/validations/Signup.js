@@ -19,6 +19,7 @@ const SignUpSchema = Yup.object().shape({
     .required("Email is required."),
   username: Yup.string()
     .required("Username is required.")
+    .matches(/^\S*$/, 'Username should not contain spaces')
     .test(
       "Unique Username",
       "Username is already in use.", // <- key, message

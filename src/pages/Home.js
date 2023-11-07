@@ -12,118 +12,119 @@ import { useLocation, useNavigate } from "react-router";
 import { UPDATE_CONTACT } from "../routes/route";
 import {
   ALL_OPTIONS,
-  FAVORITES_OPTIONS,
-  EMERGENCY_OPTIONS,
-  BLOCK_OPTIONS,
+  // FAVORITES_OPTIONS,
+  // EMERGENCY_OPTIONS,
+  // BLOCK_OPTIONS,
 } from "../constants/options";
+import { sendGETRequest } from "../services/service";
 
-const DUMMY = [
-  {
-    id: 1,
-    firstName: "Katarina",
-    lastName: "Yu",
-    phoneNumber: "+63 927 123 1234",
-    isFavorite: true,
-    deliveryAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-    billingAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-  },
-  {
-    id: 2,
-    firstName: "Katarina",
-    lastName: "Yu",
-    phoneNumber: "+63 927 123 1234",
-    isFavorite: true,
-    deliveryAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-    billingAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-  },
-  {
-    id: 3,
-    firstName: "Katarina",
-    lastName: "Yu",
-    phoneNumber: "+63 927 123 1234",
-    isFavorite: true,
-    deliveryAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-    billingAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-  },
-  {
-    id: 4,
-    firstName: "Katarina",
-    lastName: "Yu",
-    phoneNumber: "+63 927 123 1234",
-    isFavorite: true,
-    deliveryAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-    billingAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-  },
-  {
-    id: 5,
-    firstName: "Katarina",
-    lastName: "Yu",
-    phoneNumber: "+63 927 123 1234",
-    isFavorite: true,
-    deliveryAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-    billingAddress: {
-      houseNo: 719,
-      street: "123 Manuel L. Quezon",
-      city: "Mandaue",
-      province: "Cebu",
-      zipCode: 6014,
-    },
-  },
-];
+// const DUMMY = [
+//   {
+//     id: 1,
+//     firstName: "Katarina",
+//     lastName: "Yu",
+//     phoneNumber: "+63 927 123 1234",
+//     isFavorite: true,
+//     deliveryAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//     billingAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//   },
+//   {
+//     id: 2,
+//     firstName: "Katarina",
+//     lastName: "Yu",
+//     phoneNumber: "+63 927 123 1234",
+//     isFavorite: true,
+//     deliveryAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//     billingAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//   },
+//   {
+//     id: 3,
+//     firstName: "Katarina",
+//     lastName: "Yu",
+//     phoneNumber: "+63 927 123 1234",
+//     isFavorite: true,
+//     deliveryAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//     billingAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//   },
+//   {
+//     id: 4,
+//     firstName: "Katarina",
+//     lastName: "Yu",
+//     phoneNumber: "+63 927 123 1234",
+//     isFavorite: true,
+//     deliveryAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//     billingAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//   },
+//   {
+//     id: 5,
+//     firstName: "Katarina",
+//     lastName: "Yu",
+//     phoneNumber: "+63 927 123 1234",
+//     isFavorite: true,
+//     deliveryAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//     billingAddress: {
+//       houseNo: 719,
+//       street: "123 Manuel L. Quezon",
+//       city: "Mandaue",
+//       province: "Cebu",
+//       zipCode: 6014,
+//     },
+//   },
+// ];
 
 const lookUpParentVisibility = (parentKey, tableHeaders) => {
   const parent = tableHeaders.find((header) => header.key === parentKey);
@@ -138,9 +139,38 @@ const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { shouldShowModal, openModal, closeModal } = useModal();
+  const [data, setData] = useState({
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [availableTableColumns, setAvailableTableColumns] =
     useState(TABLE_HEADERS);
+  const [pageSize, setPageSize] = useState(5);
+  const handlePageSizeSelect = (e) => {
+    setPageSize(Number(e.target.value));
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    const getContacts = async () => {
+      try {
+        const response = await sendGETRequest(
+          `/contacts?limit=${pageSize}&page=${currentPage}`
+        );
+        console.log(response.data);
+        setData(response.data);
+      } catch (err) {
+        console.log("contacts error", err);
+      }
+    };
+    getContacts();
+  }, [pageSize, currentPage]);
 
   const handleTableColumnUpdate = (e) => {
     const updated = availableTableColumns.map((tableColumn) => {
@@ -161,11 +191,10 @@ const Home = () => {
   const [dataIdsChecked, setDataIdsChecked] = useState([]);
   const handleCheckBox = (e) => {
     if (e.target.checked) {
-      if (dataIdsChecked.length === DUMMY.length - 1) {
-        setAreAllChecked(true)
+      if (dataIdsChecked.length === data.results.length - 1) {
+        setAreAllChecked(true);
       }
       setDataIdsChecked((ids) => [...ids, Number(e.target.value)]);
-
     } else {
       const temp = dataIdsChecked.filter((id) => id !== Number(e.target.value));
       setDataIdsChecked([...temp]);
@@ -179,12 +208,12 @@ const Home = () => {
 
   useEffect(() => {
     if (areAllChecked) {
-      const ids = DUMMY.map((data) => data.id);
+      const ids = data.results.map((data) => data.id);
       setDataIdsChecked(ids);
     } else {
       setDataIdsChecked([]);
     }
-  }, [areAllChecked]);
+  }, [areAllChecked, data.results]);
 
   const handleSelectedOptions = (method) => {
     console.log("hello", method);
@@ -201,7 +230,7 @@ const Home = () => {
         availableTableColumns={availableTableColumns}
         dataIdsChecked={dataIdsChecked}
         handleSelectedOptions={handleSelectedOptions}
-        availableOptions={BLOCK_OPTIONS}
+        availableOptions={ALL_OPTIONS}
       ></ActionTab>
 
       <div className="overflow-x-auto flex-1">
@@ -256,7 +285,7 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {DUMMY.map((data) => {
+            {data.results.map((data) => {
               return (
                 <tr key={data.id} className="text-center p-2">
                   <td className="border border-collapse border-slate-400 p-2">
@@ -355,6 +384,7 @@ const Home = () => {
             name="pageSize"
             id="page_size"
             className="rounded-md bg-white ring-1 border ring-black ring-opacity-5 focus:outline-none px-2 py-1 mx-2"
+            onChange={handlePageSizeSelect}
           >
             <option value="5" className="px-4 py-2 block">
               5
@@ -377,12 +407,9 @@ const Home = () => {
         <div className="py-1 flex flex-wrap">
           <Pagination
             currentPage={currentPage}
-            totalCount={100}
-            pageSize={5}
-            onPageChange={(page) => {
-              console.log("hello");
-              setCurrentPage(page);
-            }}
+            totalCount={data.count}
+            pageSize={pageSize}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>

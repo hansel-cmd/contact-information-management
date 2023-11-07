@@ -5,7 +5,7 @@ import { LOGIN } from "./routes/route";
 import { sendGETRequest, sendPOSTRequest } from "./services/service";
 import Toast from "./components/Toast";
 import { useToast } from "./hooks/useToast";
-import { setItem, removeItem } from "./services/localStorage";
+import { setItem, removeItem, getItem } from "./services/localStorage";
 
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const ProtectedRoute = ({ children }) => {
         if (err.response.status === 401) {
           // let's refresh the access token using refresh token.
           try {
-            const refresh = localStorage.getItem("refresh_token");
+            const refresh = getItem("refresh_token");
             const response = await sendPOSTRequest(
               { refresh },
               "login/refresh/"
@@ -39,8 +39,8 @@ const ProtectedRoute = ({ children }) => {
             // Unauthorized 401. It means all  tokens are already invalid/expired.
             // We ask the user to log back in.
             if (error.response.status === 401) {
-              removeItem('token');
-              removeItem('refresh_token');
+              removeItem("token");
+              removeItem("refresh_token");
               // Show Toast
               handleShowToast();
               setTimeout(() => {
@@ -59,6 +59,7 @@ const ProtectedRoute = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // MAKE SURE THAT WE ARE SHOWING LOADING SCREEN WHEN WE SHOW THIS.
   if (showToast) {
     return (
       <>

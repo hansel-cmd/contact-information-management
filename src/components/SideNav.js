@@ -1,9 +1,25 @@
 import { useLocation } from "react-router";
 import NavigationLink from "./NavigationLink";
 import { NAVIGATION, ACTIONS, OTHERS } from "../routes/navigationLinks";
+import { sendPOSTRequest } from "../services/service";
+import { getItem, removeItem } from "../services/localStorage";
+import { useNavigate } from "react-router-dom";
+import { LOGIN } from "../routes/route";
 
 const SideNav = ({ isOpen, handleToggleSideNav, WIDE, NARROW }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const refresh_token = getItem("refresh_token");
+    try {
+      await sendPOSTRequest({ refresh_token }, "logout/");
+      removeItem("token");
+      navigate(LOGIN, { replace: true });
+    } catch (error) {
+      console.log("logout failed.", error);
+    }
+  };
 
   return (
     <div
@@ -26,11 +42,14 @@ const SideNav = ({ isOpen, handleToggleSideNav, WIDE, NARROW }) => {
           location={location.pathname}
         />
 
+        {/* Logout */}
         <NavigationLink
           divider={null}
           isOpen={isOpen}
           links={OTHERS}
           location={location.pathname}
+          isLogout={true}
+          fn={handleLogout}
         />
       </div>
 

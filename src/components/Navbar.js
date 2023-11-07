@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import * as routes from "../routes/route";
 import { useDarkMode } from "../hooks/useDarkMode";
+import AuthContext from "../context/authContext";
 
 const Navbar = () => {
-  const {isDarkMode, toggleDarkMode } = useDarkMode()
+  const { user } = useContext(AuthContext);
+  console.log("navbar:", user);
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [showOffCanvas, setShowOffCanvas] = useState(false);
 
   const openOffCanvas = () => {
@@ -41,10 +44,14 @@ const Navbar = () => {
              after:transition-all dark:border-gray-600 peer-checked:bg-black"
           ></div>
           <span className="ml-3 text-sm font-medium text-white dark:text-yellow-500">
-            <i className={isDarkMode ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill'}></i>
+            <i
+              className={
+                isDarkMode ? "bi bi-moon-stars-fill" : "bi bi-sun-fill"
+              }
+            ></i>
           </span>
         </label>
-        <p className="text-white">Hello, Katarina!</p>
+        <p className="text-white">Hello, {user?.first_name}!</p>
         <span
           className="inline-block h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer"
           onClick={openOffCanvas}

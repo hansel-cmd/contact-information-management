@@ -20,7 +20,7 @@ const modalHeaderBody = (
   </span>
 );
 const modalFooterBody =
-  "Closing this modal without verifying your email address won't create your account.";
+  "Leaving this page without verifying your email address won't allow you access to the application.";
 
 const Signup = () => {
   const [formActions, setFormActions] = useState(null);

@@ -31,7 +31,11 @@ const Layout = ({ children }) => {
           NARROW={NARROW}
           WIDE={WIDE}
         ></SideNav>
-        <div className={`${isOpen ? WIDE_MARGIN : NARROW_MARGIN} duration-300 flex justify-center`}>
+        <div
+          className={`${
+            isOpen ? WIDE_MARGIN : NARROW_MARGIN
+          } duration-300 flex justify-center`}
+        >
           <div className="container p-5 sm:p-10 sm:pt-8 lg:p-20 lg:pt-12">
             {children}
           </div>

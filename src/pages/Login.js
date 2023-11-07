@@ -1,29 +1,110 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SIGNUP, FORGOT_PASSWORD } from "../routes/route";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { LoginSchema } from "../validations/Login";
-import Api from "../services/api";
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 import Spinner from "../components/Spinner";
+import AuthContext from "../context/authContext";
+import VerifyModal from "../components/VerifyModal";
+import { useModal } from "../hooks/useModal";
+import { sendPOSTRequest, sendPUTRequest } from "../services/service";
+import { useToast } from "../hooks/useToast";
+import Toast from "../components/Toast";
+import { INDEX } from "../routes/route";
 
+const modalTitle = "Enter the 6-digit code";
+const modalHeaderBody = (
+  <span>
+    We have sent a <strong>6-digit code</strong> to your email for email
+    verification.
+  </span>
+);
+const modalFooterBody =
+  "You must verify your email address before you can log in.";
 
 const Login = () => {
+  const { user, setUser } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const { shouldShowModal, closeModal, openModal } = useModal();
+  const [verificationError, setVerificationError] = useState("");
+  const { showToast, handleShowToast } = useToast(3000);
+  const navigate = useNavigate();
+
+  const handleVerify = async (otp) => {
+    console.log("verifying...", user.id, otp);
+    try {
+      const response = await sendPUTRequest(
+        {
+          user_id: user.id,
+          token: otp.join(""),
+        },
+        "verify-email-confirmation/"
+      );
+      if (response.status === 200) {
+        closeModal();
+        setVerificationError("");
+
+        // show success message!
+        handleShowToast();
+
+        setUser((current) => ({ ...current, is_email_confirmed: true }));
+
+        // proceed to the dashboard.
+        navigate(INDEX, { replace: true });
+      }
+    } catch (err) {
+      if (err?.response?.status === 400) {
+        setVerificationError("The provided 6-digit code is invalid/expired.");
+        return;
+      }
+      setVerificationError("Cannot perform action. Please try again later.");
+    }
+  };
 
   const handleSubmit = async (values, actions) => {
     try {
-      const response = await Api().post("login/", values);
+      const response = await sendPOSTRequest(values, "login/");
       console.log(response);
-
-      if (response.status === 200) {
-        // Better use redux to handle tokens.
+      if (response.data?.user?.is_email_confirmed) {
         localStorage.setItem("token", response.data.access);
         localStorage.setItem("refresh_token", response.data.refresh);
+
+        setLoginError("");
+        setUser({ ...response.data?.user });
+
+        // proceed to the dashboard.
+        navigate(INDEX, { replace: true });
+
+        return;
       }
 
-      setLoginError("");
+      // send email verification.
+      try {
+        console.log(
+          "hehehe",
+          response.data?.user?.id,
+          response.data?.user?.email
+        );
+        const emailResponse = await sendPOSTRequest(
+          {
+            user_id: response.data?.user?.id,
+            email: response.data?.user?.email,
+          },
+          "send-email-confirmation/"
+        );
+
+        if (emailResponse.status === 200) {
+          setLoginError("");
+          setUser({ ...response.data.user });
+          // Show the modal to verify email.
+          openModal();
+        }
+      } catch (error) {
+        setLoginError("Cannot perform action. Please try again later.");
+        return;
+      }
     } catch (err) {
       // Invalid credentials.
       if (err?.response?.status === 401) {
@@ -124,6 +205,24 @@ const Login = () => {
           </p>
         </div>
       </div>
+
+      <VerifyModal
+        modalTitle={modalTitle}
+        modalHeaderBody={modalHeaderBody}
+        modalFooterBody={modalFooterBody}
+        showModal={shouldShowModal}
+        fnCancel={() => {
+          setVerificationError("");
+          closeModal();
+        }}
+        fnContinue={handleVerify}
+        errorMessage={verificationError}
+      ></VerifyModal>
+
+      <Toast
+        message="Your email address has been verified! Redirecting..."
+        showToast={showToast}
+      />
     </div>
   );
 };

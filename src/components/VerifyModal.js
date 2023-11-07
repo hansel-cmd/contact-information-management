@@ -6,7 +6,6 @@ const VerifyModal = ({
   modalTitle,
   modalHeaderBody,
   modalFooterBody,
-  modalButtonTitle,
   errorMessage,
   showModal,
   fnCancel,

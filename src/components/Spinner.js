@@ -1,9 +1,9 @@
-const Spinner = ({ isLoading }) => {
+const Spinner = ({ isLoading, width ='w-4', height = 'h-4' }) => {
   return (
     <div role="status" className={isLoading ? "block" : "hidden"}>
       <svg
         aria-hidden="true"
-        className="w-4 h-4 mr-2 animate-spin fill-blue-600"
+        className={`${width} ${height} mr-2 animate-spin fill-blue-600`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

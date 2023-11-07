@@ -6,7 +6,6 @@ import AuthContext from "../context/authContext";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
-  console.log("navbar:", user);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [showOffCanvas, setShowOffCanvas] = useState(false);
 

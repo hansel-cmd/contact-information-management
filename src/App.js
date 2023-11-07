@@ -14,6 +14,7 @@ import EditContact from "./pages/EditContact";
 import { useState } from "react";
 import AuthContext from "./context/authContext";
 import ProtectedRoute from "./ProtectedRoute";
+import IsNotAuthenticated from "./isNotAuthenticated";
 
 function App() {
   const [user, setUser] = useState({});
@@ -100,11 +101,29 @@ function App() {
                 </ProtectedRoute>
               }
             ></Route>
-            <Route path={route.LOGIN} element={<Login />}></Route>
-            <Route path={route.SIGNUP} element={<Signup />}></Route>
+            <Route
+              path={route.LOGIN}
+              element={
+                <IsNotAuthenticated>
+                  <Login />
+                </IsNotAuthenticated>
+              }
+            ></Route>
+            <Route
+              path={route.SIGNUP}
+              element={
+                <IsNotAuthenticated>
+                  <Signup />
+                </IsNotAuthenticated>
+              }
+            ></Route>
             <Route
               path={route.FORGOT_PASSWORD}
-              element={<ForgotPassword />}
+              element={
+                <IsNotAuthenticated>
+                  <ForgotPassword />
+                </IsNotAuthenticated>
+              }
             ></Route>
             <Route path={route.NOT_FOUND} element={<NotFound />}></Route>
             <Route path={"*"} element={<NotFound />}></Route>

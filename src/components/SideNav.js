@@ -5,16 +5,21 @@ import { sendPOSTRequest } from "../services/service";
 import { getItem, removeItem } from "../services/localStorage";
 import { useNavigate } from "react-router-dom";
 import { LOGIN } from "../routes/route";
+import { useContext } from "react";
+import AuthContext from "../context/authContext";
 
 const SideNav = ({ isOpen, handleToggleSideNav, WIDE, NARROW }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const {setUser} = useContext(AuthContext)
 
   const handleLogout = async () => {
     const refresh_token = getItem("refresh_token");
     try {
       await sendPOSTRequest({ refresh_token }, "logout/");
       removeItem("token");
+      removeItem("refresh_token");
+      setUser({})
       navigate(LOGIN, { replace: true });
     } catch (error) {
       console.log("logout failed.", error);

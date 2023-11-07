@@ -32,6 +32,9 @@ const Login = () => {
   const [verificationError, setVerificationError] = useState("");
   const { showToast, handleShowToast } = useToast(3000);
   const navigate = useNavigate();
+  // These are the tokens returned when we log in but the email was not yet verified.
+  // We can reuse these tokens once the email is verified.
+  const [tokens, setTokens] = useState({});
 
   const handleVerify = async (otp) => {
     try {
@@ -51,8 +54,14 @@ const Login = () => {
 
         setUser((current) => ({ ...current, is_email_confirmed: true }));
 
+        // set the tokens from when we logged in
+        setItem("token", tokens.token);
+        setItem("refresh_token", tokens.refresh);
+
         // proceed to the dashboard.
-        navigate(INDEX, { replace: true });
+        setTimeout(() => {
+          navigate(INDEX, { replace: true });
+        }, 1200);
       }
     } catch (err) {
       if (err?.response?.status === 400) {
@@ -66,6 +75,7 @@ const Login = () => {
   const handleSubmit = async (values, actions) => {
     try {
       const response = await sendPOSTRequest(values, "login/");
+      console.log("logging in", response);
       if (response.data?.user?.is_email_confirmed) {
         setItem("token", response.data.access);
         setItem("refresh_token", response.data.refresh);
@@ -81,6 +91,7 @@ const Login = () => {
 
       // send email verification.
       try {
+        console.log("i am sending email verification...");
         const emailResponse = await sendPOSTRequest(
           {
             user_id: response.data?.user?.id,
@@ -92,6 +103,10 @@ const Login = () => {
         if (emailResponse.status === 200) {
           setLoginError("");
           setUser({ ...response.data.user });
+          setTokens({
+            token: response.data.access,
+            refresh: response.data.refresh,
+          });
           // Show the modal to verify email.
           openModal();
         }

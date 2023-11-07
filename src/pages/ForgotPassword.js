@@ -71,7 +71,6 @@ const ForgotPassword = () => {
   };
 
   const handleVerifyOTP = async (otp) => {
-    console.log(otp)
     try {
       const response = await sendGETRequest(
         `validate-forgot-password-token/?email=${email}&token=${otp.join("")}`

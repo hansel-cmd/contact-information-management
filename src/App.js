@@ -13,6 +13,7 @@ import Scroller from "./components/Scroller";
 import EditContact from "./pages/EditContact";
 import { useState } from "react";
 import AuthContext from "./context/authContext";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [user, setUser] = useState({});
@@ -20,69 +21,83 @@ function App() {
 
   return (
     <div className="min-h-screen">
-      <Provider value={{user, setUser}}>
+      <Provider value={{ user, setUser }}>
         <BrowserRouter>
           <Routes>
             <Route
               path={route.INDEX}
               element={
-                <Layout>
-                  <Home />
-                </Layout>
+                <ProtectedRoute>
+                  <Layout>
+                    <Home />
+                  </Layout>
+                </ProtectedRoute>
               }
             ></Route>
             <Route
               path={route.FAVORITES}
               element={
-                <Layout>
-                  <Home />
-                </Layout>
+                <ProtectedRoute>
+                  <Layout>
+                    <Home />
+                  </Layout>
+                </ProtectedRoute>
               }
             ></Route>
             <Route
               path={route.BLOCKED}
               element={
-                <Layout>
-                  <Home />
-                </Layout>
+                <ProtectedRoute>
+                  <Layout>
+                    <Home />
+                  </Layout>
+                </ProtectedRoute>
               }
             ></Route>
             <Route
               path={route.NEW_CONTACT}
               element={
-                <Layout>
-                  <Scroller>
-                    <NewContact />
-                  </Scroller>
-                </Layout>
+                <ProtectedRoute>
+                  <Layout>
+                    <Scroller>
+                      <NewContact />
+                    </Scroller>
+                  </Layout>
+                </ProtectedRoute>
               }
             ></Route>
             <Route
               path={route.UPDATE_PROFILE}
               element={
-                <Layout>
-                  <Scroller>
-                    <UpdateProfile />
-                  </Scroller>
-                </Layout>
+                <ProtectedRoute>
+                  <Layout>
+                    <Scroller>
+                      <UpdateProfile />
+                    </Scroller>
+                  </Layout>
+                </ProtectedRoute>
               }
             ></Route>
             <Route
               path={route.SETTINGS}
               element={
-                <Layout>
-                  <Settings />
-                </Layout>
+                <ProtectedRoute>
+                  <Layout>
+                    <Settings />
+                  </Layout>
+                </ProtectedRoute>
               }
             ></Route>
             <Route
               path={route.UPDATE_CONTACT}
               element={
-                <Layout>
-                  <Scroller>
-                    <EditContact />
-                  </Scroller>
-                </Layout>
+                <ProtectedRoute>
+                  <Layout>
+                    <Scroller>
+                      <EditContact />
+                    </Scroller>
+                  </Layout>
+                </ProtectedRoute>
               }
             ></Route>
             <Route path={route.LOGIN} element={<Login />}></Route>

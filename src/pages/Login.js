@@ -12,6 +12,7 @@ import { sendPOSTRequest, sendPUTRequest } from "../services/service";
 import { useToast } from "../hooks/useToast";
 import Toast from "../components/Toast";
 import { INDEX } from "../routes/route";
+import { setItem } from "../services/localStorage";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (
@@ -33,7 +34,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleVerify = async (otp) => {
-    console.log("verifying...", user.id, otp);
     try {
       const response = await sendPUTRequest(
         {
@@ -66,10 +66,9 @@ const Login = () => {
   const handleSubmit = async (values, actions) => {
     try {
       const response = await sendPOSTRequest(values, "login/");
-      console.log(response);
       if (response.data?.user?.is_email_confirmed) {
-        localStorage.setItem("token", response.data.access);
-        localStorage.setItem("refresh_token", response.data.refresh);
+        setItem("token", response.data.access);
+        setItem("refresh_token", response.data.refresh);
 
         setLoginError("");
         setUser({ ...response.data?.user });
@@ -82,11 +81,6 @@ const Login = () => {
 
       // send email verification.
       try {
-        console.log(
-          "hehehe",
-          response.data?.user?.id,
-          response.data?.user?.email
-        );
         const emailResponse = await sendPOSTRequest(
           {
             user_id: response.data?.user?.id,

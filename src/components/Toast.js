@@ -2,7 +2,7 @@ const Toast = ({ icon, message, showToast, setShowToast }) => {
     return (
       <>
         {showToast && (
-          <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 shadow-md rounded-md p-4">
+          <div className="fixed top-10 left-1/2 z-50 transform -translate-x-1/2 bg-white border border-gray-300 shadow-md rounded-md p-4">
             <div className="flex items-center">
               <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-2">
                 <svg

@@ -4,13 +4,13 @@ import * as Yup from "yup";
 const SignUpSchema = Yup.object().shape({
   firstName: Yup.string()
     .matches(
-      /^[A-Za-z]+$/,
+      /^[A-Za-z ]+$/,
       "First Name should contain only alphabetic characters."
     )
     .required("First Name is required."),
   lastName: Yup.string()
     .matches(
-      /^[A-Za-z]+$/,
+      /^[A-Za-z ]+$/,
       "Last Name should contain only alphabetic characters."
     )
     .required("Last Name is required."),

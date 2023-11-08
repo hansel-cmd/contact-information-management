@@ -18,13 +18,13 @@ const ProtectedRoute = ({ children }) => {
     const getUser = async () => {
       try {
         const response = await sendGETRequest("user/me/");
-        if (response.status === 200) {
+        if (response?.status === 200) {
           setUser(response.data);
           return;
         }
       } catch (err) {
         // UnAuthorized 401. It means access token has expired.
-        if (err.response.status === 401) {
+        if (err.response?.status === 401) {
           // let's refresh the access token using refresh token.
           tryRefreshingAccessToken();
         } else {
@@ -54,14 +54,14 @@ const ProtectedRoute = ({ children }) => {
       };
 
       const response = await sendPOSTRequest({ refresh }, "login/refresh/");
-      if (response.status === 200) {
+      if (response?.status === 200) {
         // access token is refreshed.
         setItem("token", response.data.access);
       }
     } catch (error) {
       // Unauthorized 401. It means all tokens are already invalid/expired.
       // We ask the user to log back in.
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         handleTokenExpiration();
         return;
       }

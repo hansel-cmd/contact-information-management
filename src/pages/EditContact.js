@@ -125,11 +125,11 @@ const EditContact = () => {
 
             <section className="flex-[2] px-4">
               <div className="py-4">
-                <BillingAddress />
+                {/* <BillingAddress /> */}
               </div>
 
               <div className="py-4">
-                <DeliveryAddress />
+                {/* <DeliveryAddress /> */}
               </div>
 
               <input

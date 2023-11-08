@@ -11,6 +11,7 @@ import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
 import { sendDELETERequest, sendPOSTRequest, sendPUTRequest } from "../services/service";
 import { usePassword } from "../hooks/usePassword";
+import removeExtraSpaces from "../utils/removeExtraSpaces";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (
@@ -138,6 +139,7 @@ const Signup = () => {
                     name="firstName"
                     type="text"
                     className="border-2 p-1 w-full"
+                    onBlur={(e) =>removeExtraSpaces(e, props)}
                   />
                 </div>
                 <div className="flex flex-col mb-4 justify-between w-full flex-wrap">
@@ -152,6 +154,7 @@ const Signup = () => {
                     name="lastName"
                     type="text"
                     className="border-2 p-1 w-full"
+                    onBlur={(e) =>removeExtraSpaces(e, props)}
                   />
                 </div>
               </div>

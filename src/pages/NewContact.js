@@ -12,9 +12,15 @@ import { useState } from "react";
 import { sendPOSTRequest } from "../services/service";
 import Api from "../services/api";
 
-const FileUpload = ({ fileRef, setThumbnail, setImage, ...props }) => {
+const FileUpload = ({
+  fileRef,
+  setThumbnail,
+  setImage,
+  formikProps,
+  ...props
+}) => {
   // eslint-disable-next-line no-unused-vars
-  const [field, _] = useField(props);
+  const [field, meta] = useField(props);
 
   const handleFileUpload = (event) => {
     let reader = new FileReader();
@@ -22,22 +28,27 @@ const FileUpload = ({ fileRef, setThumbnail, setImage, ...props }) => {
     reader.onloadend = () => {
       setThumbnail(reader.result);
     };
-    reader.readAsDataURL(file);
+    if (file) reader.readAsDataURL(file);
   };
 
   return (
-    <input
-      ref={fileRef}
-      id="dropzone-file"
-      multiple={true}
-      type="file"
-      {...field}
-      {...props}
-      onChange={(e) => {
-        setImage(e.target.files[0]);
-        handleFileUpload(e);
-      }}
-    />
+    <>
+      <input
+        ref={fileRef}
+        id="dropzone-file"
+        multiple={true}
+        type="file"
+        accept="image/png, image/jpg, image/jpeg"
+        {...field}
+        {...props}
+        onChange={(e) => {
+          setImage(e.target.files[0]);
+          handleFileUpload(e);
+          formikProps.handleChange(e);
+        }}
+      />
+      <p className="text-red-600">{meta.error}</p>
+    </>
   );
 };
 
@@ -46,6 +57,7 @@ const FileUploadContainer = ({
   thumbnail,
   setThumbnail,
   setImage,
+  formikProps,
 }) => {
   return (
     <>
@@ -76,6 +88,7 @@ const FileUploadContainer = ({
         name="profile"
         setThumbnail={setThumbnail}
         setImage={setImage}
+        formikProps={formikProps}
       />
     </>
   );
@@ -87,14 +100,13 @@ const NewContact = () => {
   const [image, setImage] = useState(null);
   const profileRef = useRef(null);
   const handleSubmit = async (values, actions) => {
-    console.log(values, image);
 
     // from: '+63 (xxx) xxx-xxxx' to '+63xxxxxxxxxx'
-    const phoneNumber = values.phoneNumber.replace(/[()\s-]/g, '');
-    console.log('phoneNUmber', phoneNumber)
+    const phoneNumber = values.phoneNumber.replace(/[()\s-]/g, "");
+    console.log("phoneNUmber", phoneNumber);
 
     const formData = new FormData();
-    formData.append("profile", image);
+    if (image) formData.append("profile", image);
     formData.append("first_name", values.firstName);
     formData.append("last_name", values.lastName);
     formData.append("phone_number", phoneNumber);
@@ -113,13 +125,12 @@ const NewContact = () => {
     formData.append("is_emergency", values.emergency);
 
     try {
-      // sendPOSTRequest();
       const response = await Api().post("create-contact/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("RESPONSE", response)
+      console.log(response)
     } catch (error) {
-      console.log("error sending", error)
+      console.log("error sending", error);
     }
   };
 
@@ -221,12 +232,10 @@ const NewContact = () => {
                             setThumbnail={setThumbnail}
                             thumbnail={thumbnail}
                             setImage={setImage}
+                            formikProps={props}
                           />
                         </label>
                       </div>
-                      <ErrorMessage name="profile">
-                        {(error) => <p className="text-red-600">{error}</p>}
-                      </ErrorMessage>
 
                       <div className="pt-4">
                         <div className="flex flex-col mb-4">

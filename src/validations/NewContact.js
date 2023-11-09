@@ -16,9 +16,14 @@ const NewContactSchema = Yup.object().shape({
     .required("Last Name is required."),
   phoneNumber: Yup.string()
     .required("Phone Number is required.")
+    .test("len", "Invalid Phone Number", (value) => {
+      let number = value.replace(/\s|\(|\)|-|_/g, "");
+      return number.length >= 13;
+    })
     .test("Invalid Phone Number.", "Invalid Phone Number", function (value) {
       let number = value.replace(/[()\s-_]/g, "");
       number = encodeURIComponent(number);
+
       return new Promise((resolve, reject) => {
         Api()
           .get(`check-phone-number/?phoneNumber=${number}`)

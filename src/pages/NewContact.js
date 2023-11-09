@@ -9,8 +9,10 @@ import Spinner from "../components/Spinner";
 import { useRef } from "react";
 import * as Yup from "yup";
 import { useState } from "react";
-import { sendPOSTRequest } from "../services/service";
 import Api from "../services/api";
+import Toast from "../components/Toast";
+import { useToast } from "../hooks/useToast";
+import { useIcon } from "../hooks/useIcon";
 
 const FileUpload = ({
   fileRef,
@@ -99,8 +101,11 @@ const NewContact = () => {
   const [thumbnail, setThumbnail] = useState(undefined);
   const [image, setImage] = useState(null);
   const profileRef = useRef(null);
-  const handleSubmit = async (values, actions) => {
+  const { showToast, handleShowToast } = useToast(3000);
+  const [message, setMessage] = useState("");
+  const { icon, setIsError } = useIcon();
 
+  const handleSubmit = async (values, actions) => {
     // from: '+63 (xxx) xxx-xxxx' to '+63xxxxxxxxxx'
     const phoneNumber = values.phoneNumber.replace(/[()\s-]/g, "");
     console.log("phoneNUmber", phoneNumber);
@@ -128,10 +133,20 @@ const NewContact = () => {
       const response = await Api().post("create-contact/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(response)
+      console.log(response);
+
+      if (response?.status === 201) {
+        setMessage("Created Successfully!");
+        setIsError(false)
+        actions.resetForm();
+      }
     } catch (error) {
       console.log("error sending", error);
+      setIsError(true)
+      setMessage("Cannot Perform Action. Please try again later.");
     }
+
+    handleShowToast();
   };
 
   const NumberField = ({ field }) => {
@@ -337,6 +352,12 @@ const NewContact = () => {
             </Form>
           )}
         </Formik>
+
+        <Toast
+          icon={icon}
+          message={message}
+          showToast={showToast}
+        />
       </div>
     </>
   );

@@ -11,7 +11,7 @@ import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
 import { sendDELETERequest, sendPOSTRequest, sendPUTRequest } from "../services/service";
 import { usePassword } from "../hooks/usePassword";
-import removeExtraSpaces from "../utils/removeExtraSpaces";
+import {removeExtraSpaces} from "../utils/utilities";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (

@@ -6,20 +6,20 @@ import { useModal } from "../hooks/useModal";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useCallbackPrompt } from "../hooks/useCallbackPrompt";
-import { Formik, Field, ErrorMessage, Form, useField } from "formik";
+import { Formik, Field, ErrorMessage, Form } from "formik";
 import * as Yup from "yup";
-import { PatternFormat } from "react-number-format";
 import { NewContactSchema } from "../validations/NewContact";
 import Api from "../services/api";
-import removeExtraSpaces from "../utils/removeExtraSpaces";
+import { removeExtraSpaces } from "../utils/utilities";
 import Spinner from "../components/Spinner";
 import { useRef } from "react";
 import Toast from "../components/Toast";
-import { useToast } from "../hooks/useToast";
-import { useIcon } from "../hooks/useIcon";
 import { INDEX, NOT_FOUND } from "../routes/route";
 import FileUploadContainer from "../components/FileUploadContainer";
-
+import NumberField from "../components/NumberField";
+import { formatPhoneNumber } from "../utils/utilities";
+import { useToast } from "../hooks/useToast";
+import { useIcon } from "../hooks/useIcon";
 
 const EditContact = () => {
   const { id } = useParams();
@@ -27,8 +27,16 @@ const EditContact = () => {
   const { shouldShowModal, closeModal, openModal } = useModal();
   const location = useLocation();
   const [showDialog, setShowDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showPrompt, confirmNavigation, cancelNavigation] =
     useCallbackPrompt(showDialog);
+
+  const [props, setProps] = useState(null);
+  const handleDiscard = () => {
+    props.resetForm();
+    navigate(location.state || INDEX);
+    closeModal();
+  };
 
   const [initialValues, setInitialValues] = useState({
     profile: "",
@@ -49,20 +57,18 @@ const EditContact = () => {
     delivery_province: "",
     delivery_zipCode: "",
   });
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getContact = async () => {
       try {
         setIsLoading(true);
         const response = await Api().get(`contact/${id}`);
-        console.log(response);
         if (response?.status === 200) {
           const data = {
             profile: response?.data?.profile,
             firstName: response?.data?.first_name,
             lastName: response?.data?.last_name,
-            phoneNumber: response?.data?.phone_number,
+            phoneNumber: formatPhoneNumber(response?.data?.phone_number),
             favorite: response?.data?.is_favorite,
             emergency: response?.data?.is_emergency,
             blocked: response?.data?.is_blocked,
@@ -78,7 +84,12 @@ const EditContact = () => {
             delivery_zipCode: response?.data?.delivery_zipcode,
           };
           setInitialValues(data);
-          if (response?.data?.profile) setThumbnail(response?.data?.profile);
+          if (response?.data?.profile) {
+            localStorage.setItem("oldThumbnail", response?.data?.profile);
+            setThumbnail(response?.data?.profile);
+          } else {
+            localStorage.removeItem("oldThumbnail");
+          }
         }
       } catch (error) {
         if (error.response?.status === 404) {
@@ -89,6 +100,7 @@ const EditContact = () => {
 
     getContact();
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   ///////////////////////////////////////////////////////////////////////////////////////////
@@ -130,13 +142,13 @@ const EditContact = () => {
       const response = await Api().put(`contact/update/${id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(response);
 
       if (response?.status === 200) {
         setMessage("Updated Successfully!");
         setIsError(false);
+        setShowDialog(false);
+        actions.resetForm();
       }
-      console.log("UPDATING CONTACT...");
     } catch (error) {
       console.log("error sending", error);
       setIsError(true);
@@ -144,19 +156,6 @@ const EditContact = () => {
     }
 
     handleShowToast();
-  };
-
-  const NumberField = ({ field }) => {
-    return (
-      <PatternFormat
-        {...field}
-        type="tel"
-        format="+63 (###) ###-####"
-        mask="_"
-        className="border-2 p-1"
-        placeholder="+63 (xxx) xxx-xxxx"
-      />
-    );
   };
 
   const FileValidationSchema = Yup.object({
@@ -268,6 +267,9 @@ const EditContact = () => {
                               thumbnail={thumbnail}
                               setImage={setImage}
                               formikProps={props}
+                              handleMe={(e) =>
+                                setShowDialog(e.target.files.length > 0)
+                              }
                             />
                           </label>
                         </div>
@@ -287,7 +289,14 @@ const EditContact = () => {
                               name="firstName"
                               type="text"
                               className="border-2 p-1"
-                              onBlur={(e) => removeExtraSpaces(e, props)}
+                              onBlur={(e) => {
+                                if (props.dirty && !showDialog) {
+                                  setShowDialog(true);
+                                } else if (!props.dirty && showDialog) {
+                                  setShowDialog(false);
+                                }
+                                removeExtraSpaces(e, props);
+                              }}
                             />
                           </div>
                           <div className="flex flex-col mb-4 flex-1">
@@ -304,7 +313,14 @@ const EditContact = () => {
                               name="lastName"
                               type="text"
                               className="border-2 p-1"
-                              onBlur={(e) => removeExtraSpaces(e, props)}
+                              onBlur={(e) => {
+                                if (props.dirty && !showDialog) {
+                                  setShowDialog(true);
+                                } else if (!props.dirty && showDialog) {
+                                  setShowDialog(false);
+                                }
+                                removeExtraSpaces(e, props);
+                              }}
                             />
                           </div>
                         </div>
@@ -319,6 +335,14 @@ const EditContact = () => {
                           <Field
                             id="phoneNumber"
                             name="phoneNumber"
+                            onBlur={(e) => {
+                              if (props.dirty && !showDialog) {
+                                setShowDialog(true);
+                              } else if (!props.dirty && showDialog) {
+                                setShowDialog(false);
+                              }
+                              props.getFieldProps(e.target.name).onBlur(e);
+                            }}
                             component={NumberField}
                           />
                         </div>
@@ -335,6 +359,14 @@ const EditContact = () => {
                               name="favorite"
                               type="checkbox"
                               disabled={props.values.blocked}
+                              onBlur={(e) => {
+                                if (props.dirty && !showDialog) {
+                                  setShowDialog(true);
+                                } else if (!props.dirty && showDialog) {
+                                  setShowDialog(false);
+                                }
+                                props.getFieldProps(e.target.name).onBlur(e);
+                              }}
                             />
                             <label
                               htmlFor="favorite"
@@ -349,6 +381,14 @@ const EditContact = () => {
                               name="emergency"
                               type="checkbox"
                               disabled={props.values.blocked}
+                              onBlur={(e) => {
+                                if (props.dirty && !showDialog) {
+                                  setShowDialog(true);
+                                } else if (!props.dirty && showDialog) {
+                                  setShowDialog(false);
+                                }
+                                props.getFieldProps(e.target.name).onBlur(e);
+                              }}
                             />
                             <label
                               htmlFor="emergency"
@@ -365,6 +405,14 @@ const EditContact = () => {
                               disabled={
                                 props.values.favorite || props.values.emergency
                               }
+                              onBlur={(e) => {
+                                if (props.dirty && !showDialog) {
+                                  setShowDialog(true);
+                                } else if (!props.dirty && showDialog) {
+                                  setShowDialog(false);
+                                }
+                                props.getFieldProps(e.target.name).onBlur(e);
+                              }}
                             />
                             <label htmlFor="blocked" className="ms-2 text-base">
                               Blocked
@@ -377,11 +425,30 @@ const EditContact = () => {
 
                   <section className="flex-[2] px-4">
                     <div className="py-4">
-                      <BillingAddress />
+                      <BillingAddress
+                        onBlur={(e) => {
+                          if (props.dirty && !showDialog) {
+                            setShowDialog(true);
+                          } else if (!props.dirty && showDialog) {
+                            setShowDialog(false);
+                          }
+                          props.getFieldProps(e.target.name).onBlur(e);
+                        }}
+                      />
                     </div>
 
                     <div className="py-4">
-                      <DeliveryAddress formikProps={props} />
+                      <DeliveryAddress
+                        formikProps={props}
+                        onBlur={(e) => {
+                          if (props.dirty && !showDialog) {
+                            setShowDialog(true);
+                          } else if (!props.dirty && showDialog) {
+                            setShowDialog(false);
+                          }
+                          props.getFieldProps(e.target.name).onBlur(e);
+                        }}
+                      />
                     </div>
 
                     <div className="flex flex-wrap lg:justify-end justify-start pt-4 gap-2">
@@ -389,7 +456,13 @@ const EditContact = () => {
                         type="button"
                         className="flex justify-center items-center p-2 px-6 min-w-[180px] rounded bg-red-600 hover:bg-red-700 text-white cursor-pointer float-right disabled:bg-red-400"
                         disabled={props.isSubmitting}
-                        onClick={openModal}
+                        onClick={() => {
+                          // myFunction()
+                          setShowDialog(false);
+                          setProps(props);
+
+                          openModal();
+                        }}
                       >
                         <Spinner isLoading={props.isSubmitting}></Spinner>
                         Discard Changes
@@ -422,8 +495,11 @@ const EditContact = () => {
         ></Modal>
 
         <Modal
-          fnCancel={closeModal}
-          fnContinue={() => navigate(location.state || INDEX)}
+          fnCancel={() => {
+            setShowDialog(true);
+            closeModal();
+          }}
+          fnContinue={handleDiscard}
           showModal={shouldShowModal}
           body="Changes you have made may not be saved. Do you want to continue?"
           title="Discard Changes?"

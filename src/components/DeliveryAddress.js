@@ -1,7 +1,7 @@
 import { Field, ErrorMessage, useFormikContext } from "formik";
 import { useEffect } from "react";
 
-const DeliveryAddress = ({ formikProps }) => {
+const DeliveryAddress = ({ formikProps, onBlur }) => {
   const { values, validateForm } = useFormikContext();
 
   useEffect(() => {
@@ -24,13 +24,14 @@ const DeliveryAddress = ({ formikProps }) => {
           type="checkbox"
           name="same"
           id="same"
+          onBlur={onBlur}
         />
         <label htmlFor="same" className="ms-2">
           Same as the billing address
         </label>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-3 grow flex-wrap mb-2">
+      <div className="flex flex-col lg:flex-row gap-3 grow flex-wrap mb-4">
         <div className="flex flex-col flex-[1] justify-between flex-wrap">
           <label htmlFor="delivery_houseNo" className="mb-1">
             House No.
@@ -44,6 +45,7 @@ const DeliveryAddress = ({ formikProps }) => {
             type="text"
             className="border-2 p-1 disabled:bg-gray-200"
             disabled={formikProps.values?.same}
+            onBlur={onBlur}
           />
         </div>
         <div className="flex flex-col flex-[2] justify-between flex-wrap">
@@ -60,9 +62,10 @@ const DeliveryAddress = ({ formikProps }) => {
             className="border-2 p-1 disabled:bg-gray-200"
             value={formikProps.values.delivery_street}
             disabled={formikProps.values?.same}
+            onBlur={onBlur}
           />
         </div>
-        <div className="flex flex-col flex-[3] mb-2">
+        <div className="flex flex-col flex-[3] justify-between flex-wrap">
           <label htmlFor="delivery_city" className="mb-1">
             City/Town
           </label>
@@ -75,6 +78,7 @@ const DeliveryAddress = ({ formikProps }) => {
             type="text"
             className="border-2 p-1 disabled:bg-gray-200"
             disabled={formikProps.values?.same}
+            onBlur={onBlur}
           />
         </div>
       </div>
@@ -93,6 +97,7 @@ const DeliveryAddress = ({ formikProps }) => {
             type="text"
             className="border-2 p-1 disabled:bg-gray-200"
             disabled={formikProps.values?.same}
+            onBlur={onBlur}
           />
         </div>
         <div className="flex flex-col flex-[1] justify-between flex-wrap">
@@ -108,6 +113,7 @@ const DeliveryAddress = ({ formikProps }) => {
             type="text"
             className="border-2 p-1 disabled:bg-gray-200"
             disabled={formikProps.values?.same}
+            onBlur={onBlur}
           />
         </div>
       </div>

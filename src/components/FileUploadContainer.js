@@ -4,7 +4,9 @@ const FileUpload = ({
   fileRef,
   setThumbnail,
   setImage,
+  thumbnail,
   formikProps,
+  handleMe,
   ...props
 }) => {
   // eslint-disable-next-line no-unused-vars
@@ -16,7 +18,15 @@ const FileUpload = ({
     reader.onloadend = () => {
       setThumbnail(reader.result);
     };
-    if (file) reader.readAsDataURL(file);
+    
+    if (file) {
+      reader.readAsDataURL(file);
+    } else if (!file && thumbnail) {
+      let oldThumbnail = localStorage.getItem('oldThumbnail', null)
+      setThumbnail(oldThumbnail)
+    }else {
+      setThumbnail(null)
+    }
   };
 
   return (
@@ -24,7 +34,7 @@ const FileUpload = ({
       <input
         ref={fileRef}
         id="dropzone-file"
-        multiple={true}
+        
         type="file"
         accept="image/png, image/jpg, image/jpeg"
         {...field}
@@ -32,6 +42,7 @@ const FileUpload = ({
         onChange={(e) => {
           setImage(e.target.files[0]);
           handleFileUpload(e);
+          handleMe(e);
           formikProps.handleChange(e);
         }}
       />
@@ -46,6 +57,7 @@ const FileUploadContainer = ({
   setThumbnail,
   setImage,
   formikProps,
+  handleMe,
 }) => {
   return (
     <>
@@ -71,11 +83,13 @@ const FileUploadContainer = ({
         </div>
       )}
       <FileUpload
+        handleMe={handleMe}
         fileRef={profileRef}
         className="hidden"
         name="profile"
         setThumbnail={setThumbnail}
         setImage={setImage}
+        thumbnail={thumbnail}
         formikProps={formikProps}
       />
     </>

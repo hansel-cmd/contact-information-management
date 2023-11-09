@@ -7,8 +7,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useCallbackPrompt } from "../hooks/useCallbackPrompt";
 import { Formik, Field, ErrorMessage, Form } from "formik";
-import * as Yup from "yup";
-import { NewContactSchema } from "../validations/NewContact";
+import { createCombinedSchema } from "../validations/NewContact";
 import Api from "../services/api";
 import { removeExtraSpaces } from "../utils/utilities";
 import Spinner from "../components/Spinner";
@@ -20,6 +19,7 @@ import NumberField from "../components/NumberField";
 import { formatPhoneNumber } from "../utils/utilities";
 import { useToast } from "../hooks/useToast";
 import { useIcon } from "../hooks/useIcon";
+import handleSubmitContact from "../services/handleSubmitContact";
 
 const EditContact = () => {
   const { id } = useParams();
@@ -103,103 +103,30 @@ const EditContact = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  ///////////////////////////////////////////////////////////////////////////////////////////
-
   //binary
   const [thumbnail, setThumbnail] = useState(undefined);
   const [image, setImage] = useState(null);
   const profileRef = useRef(null);
-
   const { showToast, handleShowToast } = useToast(3000);
   const [message, setMessage] = useState("");
   const { icon, setIsError } = useIcon();
 
   const handleSubmit = async (values, actions) => {
-    // from: '+63 (xxx) xxx-xxxx' to '+63xxxxxxxxxx'
-    const phoneNumber = values.phoneNumber.replace(/[()\s-]/g, "");
-    console.log("phoneNUmber", phoneNumber);
-
-    const formData = new FormData();
-    if (image) formData.append("profile", image);
-    formData.append("first_name", values.firstName);
-    formData.append("last_name", values.lastName);
-    formData.append("phone_number", phoneNumber);
-    formData.append("house_no", values.houseNo);
-    formData.append("street", values.street);
-    formData.append("city", values.city);
-    formData.append("province", values.province);
-    formData.append("zipcode", values.zipCode);
-    formData.append("delivery_house_no", values.delivery_houseNo);
-    formData.append("delivery_street", values.delivery_street);
-    formData.append("delivery_city", values.delivery_city);
-    formData.append("delivery_province", values.delivery_province);
-    formData.append("delivery_zipcode", values.delivery_zipCode);
-    formData.append("is_favorite", values.favorite);
-    formData.append("is_blocked", values.blocked);
-    formData.append("is_emergency", values.emergency);
-
-    try {
-      const response = await Api().put(`contact/update/${id}/`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (response?.status === 200) {
-        setMessage("Updated Successfully!");
-        setIsError(false);
-        setShowDialog(false);
-        actions.resetForm();
-      }
-    } catch (error) {
-      console.log("error sending", error);
-      setIsError(true);
-      setMessage("Cannot Perform Action. Please try again later.");
-    }
-
-    handleShowToast();
+    handleSubmitContact(
+      values,
+      actions,
+      image,
+      `contact/update/${id}/`,
+      "PUT",
+      setMessage,
+      setIsError,
+      setThumbnail,
+      setShowDialog,
+      handleShowToast
+    );
   };
 
-  const FileValidationSchema = Yup.object({
-    profile: Yup.mixed()
-      .test("is-file-too-big", "File exceeds 10MB", () => {
-        let valid = true;
-        const files = profileRef?.current?.files;
-        if (files) {
-          const fileArr = Array.from(files);
-          fileArr.forEach((file) => {
-            const size = file.size / 1024 / 1024;
-            if (size > 10) {
-              valid = false;
-            }
-          });
-        }
-        return valid;
-      })
-      .test(
-        "is-file-of-correct-type",
-        "Invalid file type. File type must be JPEG, JPG, or PNG.",
-        () => {
-          let valid = true;
-          const files = profileRef?.current?.files;
-          if (files) {
-            const fileArr = Array.from(files);
-            fileArr.forEach((file) => {
-              const type = file.type.split("/")[1];
-              const validTypes = ["jpeg", "png", "jpg"];
-              if (!validTypes.includes(type)) {
-                valid = false;
-              }
-            });
-          }
-          return valid;
-        }
-      ),
-  });
-
-  const CombinedSchema = Yup.object()
-    .concat(NewContactSchema)
-    .concat(FileValidationSchema);
-
-  ///////////////////////////////////////////////////////////////////////////////////////////
+  const CombinedSchema = createCombinedSchema(profileRef);
 
   return (
     <>

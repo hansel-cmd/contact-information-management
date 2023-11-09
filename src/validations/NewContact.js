@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import Api from "../services/api";
 
 const NewContactSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -13,7 +14,28 @@ const NewContactSchema = Yup.object().shape({
       "Last Name should contain only alphabetic characters."
     )
     .required("Last Name is required."),
-  phoneNumber: Yup.string().required("Phone Number is required."),
+  phoneNumber: Yup.string()
+    .required("Phone Number is required.")
+    .test("Invalid Phone Number.", "Invalid Phone Number", function (value) {
+      let number = value.replace(/[()\s-_]/g, "");
+      number = encodeURIComponent(number);
+      return new Promise((resolve, reject) => {
+        Api()
+          .get(`check-phone-number/?phoneNumber=${number}`)
+          .then((res) => {
+            if (res.status === 200) {
+              if ("error" in res.data) {
+                resolve(false);
+                return;
+              }
+              resolve(true);
+            }
+          })
+          .catch((error) => {
+            resolve(false);
+          });
+      });
+    }),
   houseNo: Yup.string()
     .required("House No is required.")
     .matches(/^[0-9]*$/, "House No should contain only numbers."),

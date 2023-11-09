@@ -13,6 +13,8 @@ import Api from "../services/api";
 import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
 import { useIcon } from "../hooks/useIcon";
+import { useCallbackPrompt } from "../hooks/useCallbackPrompt";
+import Modal from "../components/Modal";
 
 const FileUpload = ({
   fileRef,
@@ -104,6 +106,9 @@ const NewContact = () => {
   const { showToast, handleShowToast } = useToast(3000);
   const [message, setMessage] = useState("");
   const { icon, setIsError } = useIcon();
+  const [showDialog, setShowDialog] = useState(false);
+  const [showPrompt, confirmNavigation, cancelNavigation] =
+    useCallbackPrompt(showDialog);
 
   const handleSubmit = async (values, actions) => {
     // from: '+63 (xxx) xxx-xxxx' to '+63xxxxxxxxxx'
@@ -137,12 +142,12 @@ const NewContact = () => {
 
       if (response?.status === 201) {
         setMessage("Created Successfully!");
-        setIsError(false)
+        setIsError(false);
         actions.resetForm();
       }
     } catch (error) {
       console.log("error sending", error);
-      setIsError(true)
+      setIsError(true);
       setMessage("Cannot Perform Action. Please try again later.");
     }
 
@@ -231,6 +236,7 @@ const NewContact = () => {
         >
           {(props) => (
             <Form>
+              {props.dirty ? setShowDialog(true) : setShowDialog(false)}
               <section className="flex grow gap-5 flex-wrap">
                 <section className="flex-1 md:border-e-2 sm:px-4">
                   <div className="py-4">
@@ -353,11 +359,17 @@ const NewContact = () => {
           )}
         </Formik>
 
-        <Toast
-          icon={icon}
-          message={message}
-          showToast={showToast}
-        />
+        <Toast icon={icon} message={message} showToast={showToast} />
+
+        <Modal
+          fnCancel={cancelNavigation}
+          fnContinue={confirmNavigation}
+          showModal={showPrompt}
+          body="Changes you have made may not be saved. Do you want to leave without finishing?"
+          title="Leave the page?"
+          cancelLabel="Cancel"
+          continueLabel="Leave Page"
+        ></Modal>
       </div>
     </>
   );

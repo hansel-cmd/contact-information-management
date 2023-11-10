@@ -50,12 +50,11 @@ const ActionTab = ({
             onChange={handleSelect}
           >
             <option
-              value="5"
+              value="none"
               className="px-4 py-2 text-[16px] block"
-              disabled
               defaultValue
             >
-              Select Options
+              Select Option
             </option>
             {availableOptions.map((option) => (
               <option

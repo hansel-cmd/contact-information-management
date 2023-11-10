@@ -7,6 +7,7 @@ const Modal = ({
   body = "Confirm?",
   cancelLabel = "Cancel",
   continueLabel = "Continue",
+  isLoading = false
 }) => {
   const SIZES = {
     sm: {
@@ -40,16 +41,18 @@ const Modal = ({
         </div>
         <div className="flex gap-3 justify-end px-4 mb-2">
           <button
-            className="p-2 rounded bg-gray-500 hover:bg-gray-600 text-white cursor-pointer mb-2"
+            className="p-2 rounded bg-gray-500 hover:bg-gray-600 text-white cursor-pointer mb-2 disabled:bg-gray-400"
             onClick={fnCancel}
+            disabled={isLoading}
           >
             {cancelLabel}
           </button>
           <button
-            className="p-2 rounded bg-red-600 hover:bg-red-700 text-white cursor-pointer mb-2"
+            className="p-2 rounded bg-red-600 hover:bg-red-700 text-white cursor-pointer mb-2 disabled:bg-red-500"
             onClick={fnContinue}
+            disabled={isLoading}
           >
-            {continueLabel}
+            {isLoading ? 'Pending...'  : continueLabel}
           </button>
         </div>
       </div>

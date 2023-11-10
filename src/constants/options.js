@@ -1,10 +1,17 @@
+export const JUST_DELETE_OPTION = [
+    {
+        key: 'delete',
+        name: 'Delete selected contacts'
+    },
+]
+
 export const ALL_OPTIONS = [
     {
         key: 'delete',
         name: 'Delete'
     },
     {
-        key: 'add',
+        key: 'favorite',
         name: 'Add to Favorites'
     },
     {

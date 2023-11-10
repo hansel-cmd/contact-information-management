@@ -10,13 +10,14 @@ import { TABLE_HEADERS, ADDRESSES } from "../constants/tableConstants";
 import { useModal } from "../hooks/useModal";
 import { useLocation, useNavigate } from "react-router";
 import { UPDATE_CONTACT } from "../routes/route";
+import { JUST_DELETE_OPTION } from "../constants/options";
 import {
-  ALL_OPTIONS,
-  // FAVORITES_OPTIONS,
-  // EMERGENCY_OPTIONS,
-  // BLOCK_OPTIONS,
-} from "../constants/options";
-import { sendGETRequest } from "../services/service";
+  sendDELETERequest,
+  sendGETRequest,
+  sendPUTRequest,
+} from "../services/service";
+import { useToast } from "../hooks/useToast";
+import Toast from "../components/Toast";
 
 // const DUMMY = [
 //   {
@@ -149,6 +150,17 @@ const Home = () => {
   const [availableTableColumns, setAvailableTableColumns] =
     useState(TABLE_HEADERS);
   const [pageSize, setPageSize] = useState(5);
+  const { showToast, handleShowToast } = useToast(3000);
+  const [message, setMessage] = useState("");
+  const [icon, setIcon] = useState("");
+  const [idToBeDeleted, setIdToBeDeleted] = useState(null);
+  const [isDeletingSelected, setIsDeletingSelected] = useState(false);
+  const {
+    shouldShowModal: shouldShowModalForSelected,
+    openModal: openModalForSelected,
+    closeModal: closeModalForSelected,
+  } = useModal();
+
   const handlePageSizeSelect = (e) => {
     setPageSize(Number(e.target.value));
   };
@@ -170,7 +182,7 @@ const Home = () => {
       }
     };
     getContacts();
-  }, [pageSize, currentPage]);
+  }, [pageSize, currentPage, data.count]);
 
   const handleTableColumnUpdate = (e) => {
     const updated = availableTableColumns.map((tableColumn) => {
@@ -216,7 +228,169 @@ const Home = () => {
   }, [areAllChecked, data.results]);
 
   const handleSelectedOptions = (method) => {
-    console.log("hello", method);
+    if (method === "delete") openModalForSelected();
+  };
+
+  const handleDeleteSelected = async () => {
+    const countSelected = dataIdsChecked.length;
+
+    try {
+      setIsDeletingSelected(true);
+      await Promise.allSettled(dataIdsChecked.map((id) => handleDelete(id)));
+
+      // data.count is the count of the data before all the deletion
+      const totalPages = Math.ceil(data.count / pageSize);
+      // If we selected all the contacts in this page, and delete them,
+      // and it is the last page, then we go back to the previous page
+      if (countSelected === pageSize && totalPages === currentPage) {
+        handlePageChange(currentPage - 1);
+      }
+    } catch (error) {
+      console.log("error deleting all contacts", error);
+    }
+
+    setIsDeletingSelected(false);
+    closeModalForSelected();
+  };
+
+  const handleFavorite = async (id) => {
+    try {
+      const response = await sendPUTRequest({}, `favorite-contact/${id}/`);
+      if (response.status === 200) {
+        let previousValue = false;
+        // update the state
+        const updatedResults = data.results.map((result) => {
+          if (result.id === id) {
+            previousValue = result.isFavorite;
+            return {
+              ...result,
+              isFavorite: !result.isFavorite,
+            };
+          }
+          return result;
+        });
+
+        setData({ ...data, results: updatedResults });
+        setIcon("bi bi-check-circle-fill text-green-500");
+        setMessage(
+          previousValue === true
+            ? "Removed from Favorites!"
+            : "Added to Favorites!"
+        );
+      }
+    } catch (error) {
+      if (error?.response?.status === 400) {
+        setMessage(error?.response?.data.error);
+      } else {
+        setMessage("Cannot perform action. Please try again later.");
+      }
+      setIcon("bi bi-x-circle-fill text-red-500");
+    }
+
+    handleShowToast();
+  };
+
+  const handleEmergency = async (id) => {
+    try {
+      const response = await sendPUTRequest({}, `emergency-contact/${id}/`);
+      if (response.status === 200) {
+        let previousValue = false;
+        // update the state
+        const updatedResults = data.results.map((result) => {
+          if (result.id === id) {
+            previousValue = result.isEmergency;
+            return {
+              ...result,
+              isEmergency: !result.isEmergency,
+            };
+          }
+          return result;
+        });
+
+        setData({ ...data, results: updatedResults });
+        setIcon("bi bi-check-circle-fill text-green-500");
+        setMessage(
+          previousValue === true
+            ? "Removed from Emergency Contacts!"
+            : "Added to Emergency Contacts!"
+        );
+      }
+    } catch (error) {
+      if (error?.response?.status === 400) {
+        setMessage(error?.response?.data.error);
+      } else {
+        setMessage("Cannot perform action. Please try again later.");
+      }
+      setIcon("bi bi-x-circle-fill text-red-500");
+    }
+
+    handleShowToast();
+  };
+
+  const handleBlock = async (id) => {
+    try {
+      const response = await sendPUTRequest({}, `blocked-contact/${id}/`);
+      if (response.status === 200) {
+        let previousValue = false;
+        // update the state
+        const updatedResults = data.results.map((result) => {
+          if (result.id === id) {
+            previousValue = result.isBlocked;
+            return {
+              ...result,
+              isBlocked: !result.isBlocked,
+            };
+          }
+          return result;
+        });
+
+        setData({ ...data, results: updatedResults });
+        setIcon("bi bi-check-circle-fill text-green-500");
+        setMessage(
+          previousValue === true
+            ? "Removed from Blocked Contacts!"
+            : "Added to Blocked Contacts!"
+        );
+      }
+    } catch (error) {
+      if (error?.response?.status === 400) {
+        setMessage(error?.response?.data.error);
+      } else {
+        setMessage("Cannot perform action. Please try again later.");
+      }
+      setIcon("bi bi-x-circle-fill text-red-500");
+    }
+
+    handleShowToast();
+  };
+
+  const handleDelete = async (selectedId) => {
+    const id = selectedId ?? idToBeDeleted;
+    try {
+      await sendDELETERequest(`delete-contact/${id}/`);
+      const updatedResults = data.results.filter((result) => result.id !== id);
+
+      // If there is 1 contact in the last page, and it was deleted,
+      //  our currentPage should be changed to last page - 1
+      const remainder = data.count % pageSize;
+      const totalPages = Math.ceil(data.count / pageSize);
+      if (remainder === 1 && currentPage === totalPages) {
+        handlePageChange(currentPage - 1);
+      }
+
+      setData({
+        ...data,
+        count: data.count - 1,
+        results: updatedResults,
+      });
+      setIcon("bi bi-check-circle-fill text-green-500");
+      setMessage("Contact is deleted successfully!");
+    } catch (error) {
+      setMessage("Cannot perform action. Please try again later.");
+      setIcon("bi bi-x-circle-fill text-red-500");
+    }
+
+    handleShowToast();
   };
 
   return (
@@ -230,7 +404,7 @@ const Home = () => {
         availableTableColumns={availableTableColumns}
         dataIdsChecked={dataIdsChecked}
         handleSelectedOptions={handleSelectedOptions}
-        availableOptions={ALL_OPTIONS}
+        availableOptions={JUST_DELETE_OPTION}
       ></ActionTab>
 
       <div className="overflow-x-auto flex-1">
@@ -324,28 +498,52 @@ const Home = () => {
                     <td className="border border-collapse border-slate-400 py-2">
                       <div className="flex justify-center items-center h-full">
                         <ActionButton
-                          title={"favorite"}
+                          shouldBeFilled={data.isFavorite}
+                          title={
+                            data.isFavorite
+                              ? "Remove from Favorites"
+                              : "Add to Favorites"
+                          }
                           icon={"bi bi-star"}
                           iconFilled={"bi bi-star-fill"}
                           defaultColor={"text-yellow-500"}
                           onHoverColor={"text-yellow-300"}
-                          fn={() => console.log("adding to favorites...")}
+                          fn={() => {
+                            console.log(`${data.id} adding to favorites...`);
+                            handleFavorite(data.id);
+                          }}
                         />
                         <ActionButton
-                          title={"block"}
+                          shouldBeFilled={data.isBlocked}
+                          title={
+                            data.isBlocked
+                              ? "Remove from Blocked"
+                              : "Add to Blocked"
+                          }
                           icon={"bi bi-ban"}
                           iconFilled={"bi bi-ban-fill"}
                           defaultColor={"text-orange-700"}
                           onHoverColor={"text-orange-800"}
-                          fn={() => console.log("blocking contact...")}
+                          fn={() => {
+                            console.log("blocking contact...");
+                            handleBlock(data.id);
+                          }}
                         />
                         <ActionButton
-                          title={"emergency"}
+                          shouldBeFilled={data.isEmergency}
+                          title={
+                            data.isEmergency
+                              ? "Remove from Emergency Contacts"
+                              : "Add to Emergency Contacts"
+                          }
                           icon={"bi bi-bag-plus"}
                           iconFilled={"bi bi-bag-plus-fill"}
                           defaultColor={"text-blue-700"}
                           onHoverColor={"text-blue-800"}
-                          fn={() => console.log("blocking contact...")}
+                          fn={() => {
+                            console.log("adding to emergency contact...");
+                            handleEmergency(data.id);
+                          }}
                         />
                         <ActionButton
                           title={"edit"}
@@ -365,7 +563,10 @@ const Home = () => {
                           iconFilled={"bi bi-trash-fill"}
                           defaultColor={"text-red-700"}
                           onHoverColor={"text-red-800"}
-                          fn={openModal}
+                          fn={() => {
+                            setIdToBeDeleted(data.id);
+                            openModal();
+                          }}
                         />
                       </div>
                     </td>
@@ -416,7 +617,10 @@ const Home = () => {
 
       {/* Delete Modal */}
       <Modal
-        fnContinue={() => {}}
+        fnContinue={() => {
+          handleDelete();
+          closeModal();
+        }}
         fnCancel={closeModal}
         showModal={shouldShowModal}
         size={"sm"}
@@ -425,6 +629,23 @@ const Home = () => {
         }
         continueLabel="Yes, Delete"
       ></Modal>
+
+      {/* Delete Modal for Selected Items */}
+      <Modal
+        fnContinue={() => {
+          handleDeleteSelected();
+        }}
+        fnCancel={closeModalForSelected}
+        showModal={shouldShowModalForSelected}
+        size={"sm"}
+        body={
+          "Do you really want to delete the selected contacts? This process cannot be undone."
+        }
+        continueLabel="Yes, Delete"
+        isLoading={isDeletingSelected}
+      ></Modal>
+
+      <Toast icon={icon} message={message} showToast={showToast} />
     </div>
   );
 };

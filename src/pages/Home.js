@@ -155,6 +155,7 @@ const Home = () => {
   const [icon, setIcon] = useState("");
   const [idToBeDeleted, setIdToBeDeleted] = useState(null);
   const [isDeletingSelected, setIsDeletingSelected] = useState(false);
+  const [query, setQuery] = useState("");
   const {
     shouldShowModal: shouldShowModalForSelected,
     openModal: openModalForSelected,
@@ -173,16 +174,21 @@ const Home = () => {
     const getContacts = async () => {
       try {
         const response = await sendGETRequest(
-          `/contacts?limit=${pageSize}&page=${currentPage}`
+          `/search-contacts/?q=${encodeURIComponent(
+            query
+          )}&limit=${pageSize}&page=${currentPage}`
         );
         console.log(response.data);
         setData(response.data);
       } catch (err) {
         console.log("contacts error", err);
+        if (err.response?.status === 404) {
+          setCurrentPage(1);
+        }
       }
     };
     getContacts();
-  }, [pageSize, currentPage, data.count]);
+  }, [pageSize, currentPage, data.count, query]);
 
   const handleTableColumnUpdate = (e) => {
     const updated = availableTableColumns.map((tableColumn) => {
@@ -393,6 +399,15 @@ const Home = () => {
     handleShowToast();
   };
 
+  const handleSearch = (e) => {
+    console.log("I AM SEARCHING...", e.target.value);
+    setQuery(e.target.value);
+  };
+
+  const clearQueryString = () => {
+    setQuery("");
+  };
+
   return (
     <div>
       <PageTitle
@@ -400,6 +415,9 @@ const Home = () => {
         title={"All Contacts"}
       />
       <ActionTab
+        clearQueryString={clearQueryString}
+        queryString={query}
+        handleSearch={handleSearch}
         handleTableColumnUpdate={handleTableColumnUpdate}
         availableTableColumns={availableTableColumns}
         dataIdsChecked={dataIdsChecked}
@@ -459,121 +477,132 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {data.results.map((data) => {
-              return (
-                <tr key={data.id} className="text-center p-2">
-                  <td className="border border-collapse border-slate-400 p-2">
-                    <input
-                      type="checkbox"
-                      name="data"
-                      value={data.id}
-                      onChange={handleCheckBox}
-                      checked={dataIdsChecked.includes(data.id)}
-                    />
-                  </td>
-                  {lookUpParentVisibility(
-                    "firstName",
-                    availableTableColumns
-                  ) && <TableDataRow data={data.firstName} />}
-                  {lookUpParentVisibility(
-                    "lastName",
-                    availableTableColumns
-                  ) && <TableDataRow data={data.lastName} />}
-                  {lookUpParentVisibility(
-                    "phoneNumber",
-                    availableTableColumns
-                  ) && <TableDataRow data={data.phoneNumber} />}
-
-                  {lookUpParentVisibility(
-                    "deliveryAddress",
-                    availableTableColumns
-                  ) && <AddressTableDataRow data={data.deliveryAddress} />}
-
-                  {lookUpParentVisibility(
-                    "billingAddress",
-                    availableTableColumns
-                  ) && <AddressTableDataRow data={data.billingAddress} />}
-
-                  {lookUpParentVisibility("actions", availableTableColumns) && (
-                    <td className="border border-collapse border-slate-400 py-2">
-                      <div className="flex justify-center items-center h-full">
-                        <ActionButton
-                          shouldBeFilled={data.isFavorite}
-                          title={
-                            data.isFavorite
-                              ? "Remove from Favorites"
-                              : "Add to Favorites"
-                          }
-                          icon={"bi bi-star"}
-                          iconFilled={"bi bi-star-fill"}
-                          defaultColor={"text-yellow-500"}
-                          onHoverColor={"text-yellow-300"}
-                          fn={() => {
-                            console.log(`${data.id} adding to favorites...`);
-                            handleFavorite(data.id);
-                          }}
-                        />
-                        <ActionButton
-                          shouldBeFilled={data.isBlocked}
-                          title={
-                            data.isBlocked
-                              ? "Remove from Blocked"
-                              : "Add to Blocked"
-                          }
-                          icon={"bi bi-ban"}
-                          iconFilled={"bi bi-ban-fill"}
-                          defaultColor={"text-orange-700"}
-                          onHoverColor={"text-orange-800"}
-                          fn={() => {
-                            console.log("blocking contact...");
-                            handleBlock(data.id);
-                          }}
-                        />
-                        <ActionButton
-                          shouldBeFilled={data.isEmergency}
-                          title={
-                            data.isEmergency
-                              ? "Remove from Emergency Contacts"
-                              : "Add to Emergency Contacts"
-                          }
-                          icon={"bi bi-bag-plus"}
-                          iconFilled={"bi bi-bag-plus-fill"}
-                          defaultColor={"text-blue-700"}
-                          onHoverColor={"text-blue-800"}
-                          fn={() => {
-                            console.log("adding to emergency contact...");
-                            handleEmergency(data.id);
-                          }}
-                        />
-                        <ActionButton
-                          title={"edit"}
-                          icon={"bi bi-pencil"}
-                          iconFilled={"bi bi-pencil-fill"}
-                          defaultColor={"text-green-700"}
-                          onHoverColor={"text-green-800"}
-                          fn={() =>
-                            navigate(UPDATE_CONTACT.replace(":id", data.id), {
-                              state: location.pathname,
-                            })
-                          }
-                        />
-                        <ActionButton
-                          title={"delete"}
-                          icon={"bi bi-trash"}
-                          iconFilled={"bi bi-trash-fill"}
-                          defaultColor={"text-red-700"}
-                          onHoverColor={"text-red-800"}
-                          fn={() => {
-                            setIdToBeDeleted(data.id);
-                            openModal();
-                          }}
-                        />
-                      </div>
+            {data.results.length !== 0 ? (
+              data.results.map((data) => {
+                return (
+                  <tr key={data.id} className="text-center p-2">
+                    <td className="border border-collapse border-slate-400 p-2">
+                      <input
+                        type="checkbox"
+                        name="data"
+                        value={data.id}
+                        onChange={handleCheckBox}
+                        checked={dataIdsChecked.includes(data.id)}
+                      />
                     </td>
-                  )}
-                </tr>
-              );
-            })}
+                    {lookUpParentVisibility(
+                      "firstName",
+                      availableTableColumns
+                    ) && <TableDataRow data={data.firstName} />}
+                    {lookUpParentVisibility(
+                      "lastName",
+                      availableTableColumns
+                    ) && <TableDataRow data={data.lastName} />}
+                    {lookUpParentVisibility(
+                      "phoneNumber",
+                      availableTableColumns
+                    ) && <TableDataRow data={data.phoneNumber} />}
+
+                    {lookUpParentVisibility(
+                      "deliveryAddress",
+                      availableTableColumns
+                    ) && <AddressTableDataRow data={data.deliveryAddress} />}
+
+                    {lookUpParentVisibility(
+                      "billingAddress",
+                      availableTableColumns
+                    ) && <AddressTableDataRow data={data.billingAddress} />}
+
+                    {lookUpParentVisibility(
+                      "actions",
+                      availableTableColumns
+                    ) && (
+                      <td className="border border-collapse border-slate-400 py-2">
+                        <div className="flex justify-center items-center h-full">
+                          <ActionButton
+                            shouldBeFilled={data.isFavorite}
+                            title={
+                              data.isFavorite
+                                ? "Remove from Favorites"
+                                : "Add to Favorites"
+                            }
+                            icon={"bi bi-star"}
+                            iconFilled={"bi bi-star-fill"}
+                            defaultColor={"text-yellow-500"}
+                            onHoverColor={"text-yellow-300"}
+                            fn={() => {
+                              console.log(`${data.id} adding to favorites...`);
+                              handleFavorite(data.id);
+                            }}
+                          />
+                          <ActionButton
+                            shouldBeFilled={data.isBlocked}
+                            title={
+                              data.isBlocked
+                                ? "Remove from Blocked"
+                                : "Add to Blocked"
+                            }
+                            icon={"bi bi-ban"}
+                            iconFilled={"bi bi-ban-fill"}
+                            defaultColor={"text-orange-700"}
+                            onHoverColor={"text-orange-800"}
+                            fn={() => {
+                              console.log("blocking contact...");
+                              handleBlock(data.id);
+                            }}
+                          />
+                          <ActionButton
+                            shouldBeFilled={data.isEmergency}
+                            title={
+                              data.isEmergency
+                                ? "Remove from Emergency Contacts"
+                                : "Add to Emergency Contacts"
+                            }
+                            icon={"bi bi-bag-plus"}
+                            iconFilled={"bi bi-bag-plus-fill"}
+                            defaultColor={"text-blue-700"}
+                            onHoverColor={"text-blue-800"}
+                            fn={() => {
+                              console.log("adding to emergency contact...");
+                              handleEmergency(data.id);
+                            }}
+                          />
+                          <ActionButton
+                            title={"edit"}
+                            icon={"bi bi-pencil"}
+                            iconFilled={"bi bi-pencil-fill"}
+                            defaultColor={"text-green-700"}
+                            onHoverColor={"text-green-800"}
+                            fn={() =>
+                              navigate(UPDATE_CONTACT.replace(":id", data.id), {
+                                state: location.pathname,
+                              })
+                            }
+                          />
+                          <ActionButton
+                            title={"delete"}
+                            icon={"bi bi-trash"}
+                            iconFilled={"bi bi-trash-fill"}
+                            defaultColor={"text-red-700"}
+                            onHoverColor={"text-red-800"}
+                            fn={() => {
+                              setIdToBeDeleted(data.id);
+                              openModal();
+                            }}
+                          />
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                );
+              })
+            ) : (
+              <tr className="bg-slate-200">
+                <td className="border h-40 text-center" colSpan={20}>
+                  No Contacts Available.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

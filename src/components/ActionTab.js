@@ -5,6 +5,9 @@ import { useNavigate } from "react-router";
 import { NEW_CONTACT } from "../routes/route";
 
 const ActionTab = ({
+  clearQueryString,
+  queryString,
+  handleSearch,
   handleTableColumnUpdate,
   availableTableColumns,
   dataIdsChecked,
@@ -33,10 +36,20 @@ const ActionTab = ({
         <div className="flex items-center rounded-md bg-gray-200 px-2 py-2 grow">
           <i className="bi bi-search text-gray-400 text-lg block cursor-pointer"></i>
           <input
-            type="search"
+            type="text"
             className="w-full ms-2 bg-transparent focus:outline-none text-gray-900 border-0 border-transparent focus:ring-0"
             placeholder="Search"
+            onChange={handleSearch}
+            value={queryString}
           />
+          <button
+            className={`me-2 outline-none ${queryString ? "block" : "hidden"}`}
+            onClick={clearQueryString}
+          >
+            <span title="Clear Text">
+              <i className="bi bi-x-circle cursor-pointer text-lg text-red-400 hover:text-red-600"></i>
+            </span>
+          </button>
         </div>
       </div>
 

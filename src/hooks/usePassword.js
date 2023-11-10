@@ -3,6 +3,7 @@ import { PasswordSchema } from "../validations/Signup";
 
 export const usePassword = () => {
   const [showPasswordObj, setShowPasswordObj] = useState({
+    oldPassword: false,
     password: false,
     confirmPassword: false,
   });

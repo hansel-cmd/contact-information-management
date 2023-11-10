@@ -9,17 +9,6 @@ const TABS = {
 };
 
 const Settings = () => {
-  const [isEditable, setIsEditable] = useState(false);
-
-  const enableEdit = () => {
-    setIsEditable(true);
-  };
-
-  const disableEdit = () => {
-    // reset changes
-    setIsEditable(false);
-  };
-
   const [tab, setTab] = useState(TABS.ACCOUNT);
 
   return (
@@ -46,20 +35,8 @@ const Settings = () => {
             </li>
           </ul>
           <div className="border-2 border-t-0 rounded rounded-tl-none rounded-tr-none w-full lg:w-[516px] p-5">
-            {tab === TABS.ACCOUNT && (
-              <AccountSettings
-                enableEdit={enableEdit}
-                disableEdit={disableEdit}
-                isEditable={isEditable}
-              />
-            )}
-            {tab === TABS.SECURITY && (
-              <SecuritySettings
-                enableEdit={enableEdit}
-                disableEdit={disableEdit}
-                isEditable={isEditable}
-              />
-            )}
+            {tab === TABS.ACCOUNT && <AccountSettings />}
+            {tab === TABS.SECURITY && <SecuritySettings />}
           </div>
         </div>
       </div>

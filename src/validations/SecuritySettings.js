@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import Api from "../services/api";
 
 const SecuritySettingsSchema = Yup.object().shape({
   oldPassword: Yup.string()
@@ -6,7 +7,25 @@ const SecuritySettingsSchema = Yup.object().shape({
     .test(
       "Incorrect Old Password",
       "Old Password is incorrect.",
-      function (value) {}
+      function (value) {
+        return new Promise((resolve, reject) => {
+          Api()
+            .get(`user/update-password/?oldPassword=${value}`)
+            .then((res) => {
+              if (res.status === 200) {
+                if ("error" in res.data) {
+                  resolve(false);
+                  return;
+                }
+                resolve(true);
+              }
+            })
+            .catch((err) => {
+              console.log("err", err)
+              resolve(false);
+            });
+        });
+      }
     ),
   password: Yup.string().required("Password is required."),
   confirmPassword: Yup.string()

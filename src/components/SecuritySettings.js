@@ -6,6 +6,7 @@ import { useToast } from "../hooks/useToast";
 import { useEdit } from "../hooks/useEdit";
 import SecuritySettingsSchema from "../validations/SecuritySettings";
 import { usePassword } from "../hooks/usePassword";
+import { sendPUTRequest } from "../services/service";
 
 const SecuritySettings = () => {
   const { isEditable, enableEdit, disableEdit } = useEdit();
@@ -21,7 +22,24 @@ const SecuritySettings = () => {
   };
 
   const handleUpdateSecurity = async (values, actions) => {
-    console.log("UPDATING SECURITY ACCOUNT");
+    try {
+      await sendPUTRequest(
+        {
+          old_password: values.oldPassword,
+          new_password: values.password,
+          confirm_password: values.confirmPassword,
+        },
+        "user/update-password/"
+      );
+      setIcon("bi bi-check-circle-fill text-green-500");
+      setMessage("Updated Successfully!");
+      disableEdit();
+    } catch (error) {
+      console.log("error updating password", error);
+      setIcon("bi bi-x-circle-fill text-red-500");
+      setMessage('Cannot perform action. Please try again later.');
+    }
+    handleShowToast();
   };
 
   return (
@@ -52,9 +70,7 @@ const SecuritySettings = () => {
                 <Field
                   id="oldPassword"
                   name="oldPassword"
-                  type={
-                    showPasswordObj["oldPassword"] ? "text" : "password"
-                  }
+                  type={showPasswordObj["oldPassword"] ? "text" : "password"}
                   className="border-2 p-1 disabled:bg-gray-200 w-full"
                   disabled={!isEditable}
                 />
@@ -89,6 +105,7 @@ const SecuritySettings = () => {
                   name="password"
                   type={showPasswordObj["password"] ? "text" : "password"}
                   className="border-2 p-1 disabled:bg-gray-200 w-full"
+                  validate={validatePassword}
                   disabled={!isEditable}
                 />
                 <button
@@ -124,6 +141,7 @@ const SecuritySettings = () => {
                     showPasswordObj["confirmPassword"] ? "text" : "password"
                   }
                   className="border-2 p-1 disabled:bg-gray-200 w-full"
+                  validate={validatePassword}
                   disabled={!isEditable}
                 />
                 <button

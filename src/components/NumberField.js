@@ -4,11 +4,12 @@ const NumberField = ({field, ...props}) => {
     return (
       <PatternFormat
         {...field}
+        disabled={props.disabled}
         onBlur={props.onBlur}
         type="tel"
         format="+63 (###) ###-####"
         mask="_"
-        className="border-2 p-1"
+        className="border-2 p-1 disabled:bg-gray-200"
         placeholder="+63 (xxx) xxx-xxxx"
       />
     );

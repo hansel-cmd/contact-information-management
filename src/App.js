@@ -15,6 +15,7 @@ import { useState } from "react";
 import AuthContext from "./context/authContext";
 import ProtectedRoute from "./ProtectedRoute";
 import IsNotAuthenticated from "./isNotAuthenticated";
+import ContactDetail from "./pages/ContactDetail";
 
 function App() {
   const [user, setUser] = useState({});
@@ -51,6 +52,18 @@ function App() {
                 <ProtectedRoute>
                   <Layout>
                     <Home />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path={route.CONTACT_DETAIL}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Scroller>
+                      <ContactDetail></ContactDetail>
+                    </Scroller>
                   </Layout>
                 </ProtectedRoute>
               }

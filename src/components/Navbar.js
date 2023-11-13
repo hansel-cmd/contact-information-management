@@ -1,13 +1,31 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as routes from "../routes/route";
 import { useDarkMode } from "../hooks/useDarkMode";
 import AuthContext from "../context/authContext";
+import { formatPhoneNumber } from "../utils/utilities";
+import { getItem, removeItem } from "../services/localStorage";
+import { sendPOSTRequest } from "../services/service";
+import { LOGIN } from "../routes/route";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [showOffCanvas, setShowOffCanvas] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const refresh_token = getItem("refresh_token");
+    try {
+      await sendPOSTRequest({ refresh_token }, "logout/");
+      removeItem("token");
+      removeItem("refresh_token");
+      setUser({});
+      navigate(LOGIN, { replace: true });
+    } catch (error) {
+      console.log("logout failed.", error);
+    }
+  };
 
   const openOffCanvas = () => {
     setShowOffCanvas(true);
@@ -52,10 +70,10 @@ const Navbar = () => {
         </label>
         <p className="text-white">Hello, {user?.first_name}!</p>
         <span
-          className="inline-block h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer"
+          className="flex justify-center items-center h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer bg-blue-400"
           onClick={openOffCanvas}
         >
-          <img src="/assets/toArise.jpg" alt="icon" className="object-cover" />
+          <span className="text-white text-xl">{user.first_name[0].toUpperCase()}</span>
         </span>
       </div>
 
@@ -74,134 +92,132 @@ const Navbar = () => {
             </button>
           </div>
           <div className="flex p-4 gap-4 items-center">
-            <img
-              src="/assets/toArise.jpg"
-              alt=""
-              className="w-32 h-32 rounded-lg"
-            />
+            {user.profile ? (
+              <img src={user.profile} alt="" className="w-32 h-32 rounded-lg" />
+            ) : (
+              <div className="w-32 min-w-[8rem] h-32 rounded-lg bg-red-800 flex justify-center items-center">
+                <span className="text-6xl inline-block text-white">
+                  {user.first_name[0].toUpperCase()}
+                </span>
+              </div>
+            )}
             <div className="flex flex-wrap flex-col">
-              <p className="text-lg font-bold">Katarina Yu</p>
+              <p className="text-lg font-bold">
+                {user.first_name} {user.last_name}
+              </p>
               <p className="text-sm text-gray-600">
                 <span className="me-2">
                   <i className="bi bi-person-badge-fill"></i>
                 </span>
-                katarinayu08
+                {user.username}
               </p>
               <p className="text-sm text-gray-600">
                 <span className="me-2">
                   <i className="bi bi-envelope-at-fill"></i>
                 </span>
-                katarinayu@gmail.com
+                {user.email}
               </p>
               <p className="text-sm text-gray-600">
                 <span className="me-2">
                   <i className="bi bi-telephone-fill"></i>
                 </span>
-                +63 927 123 1234
+                {formatPhoneNumber(user.phone_number)}
               </p>
-              <p className="text-sm text-gray-600">
-                <span className="me-2">
-                  <i className="bi bi-house-fill"></i>
-                </span>
-                719 Manuel L. Quezon Street Avenue Gangnamgu, Seoul, 6014
-              </p>
+              <button className="rounded px-1 py-1 mt-2 w-full border-2 border-gray-500 hover:bg-gray-500 hover:text-white" onClick={handleLogout}>
+                Sign Out
+              </button>
             </div>
-          </div>
-          <div className="px-4">
-            <button className="rounded px-1 py-1 w-full border-2 border-gray-500 hover:bg-gray-500 hover:text-white">
-              Sign Out
-            </button>
           </div>
           <div className="border-b-2 h-2 w-auto mx-4"></div>
 
           <div className="px-4 pt-4">
-            <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
-              <div className="py-2 px-4 rounded-lg bg-purple-800 inline-block text-white text-lg">
-                <i className="bi bi-file-earmark-person-fill"></i>
-              </div>
-              <div>
-                <Link to={routes.INDEX} onClick={closeOffCanvas}>
+            <Link to={routes.INDEX} onClick={closeOffCanvas}>
+              <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
+                <div className="py-2 px-4 rounded-lg bg-purple-800 inline-block text-white text-lg">
+                  <i className="bi bi-file-earmark-person-fill"></i>
+                </div>
+                <div>
                   <p className="font-semibold">All Contacts</p>
                   <p className="text-sm text-gray-600">List of your contacts</p>
-                </Link>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
-              <div className="py-2 px-4 rounded-lg bg-teal-600 inline-block text-white text-lg">
-                <i className="bi bi-star-fill"></i>
-              </div>
-              <div>
-                <Link to={routes.FAVORITES} onClick={closeOffCanvas}>
+            </Link>
+            <Link to={routes.FAVORITES} onClick={closeOffCanvas}>
+              <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
+                <div className="py-2 px-4 rounded-lg bg-teal-600 inline-block text-white text-lg">
+                  <i className="bi bi-star-fill"></i>
+                </div>
+                <div>
                   <p className="font-semibold">Favorites</p>
                   <p className="text-sm text-gray-600">
                     List of your favorite contacts
                   </p>
-                </Link>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
-              <div className="py-2 px-4 rounded-lg bg-yellow-400 inline-block text-white text-lg">
-                <i className="bi bi-bag-plus-fill"></i>
-              </div>
-              <div>
-                <Link to={routes.EMERGENCY_CONTACTS} onClick={closeOffCanvas}>
+            </Link>
+            <Link to={routes.EMERGENCY_CONTACTS} onClick={closeOffCanvas}>
+              <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
+                <div className="py-2 px-4 rounded-lg bg-yellow-400 inline-block text-white text-lg">
+                  <i className="bi bi-bag-plus-fill"></i>
+                </div>
+                <div>
                   <p className="font-semibold">Emergency Contacts</p>
                   <p className="text-sm text-gray-600">
                     List of your emergency contacts
                   </p>
-                </Link>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
-              <div className="py-2 px-4 rounded-lg bg-blue-800 inline-block text-white text-lg">
-                <i className="bi bi-slash-circle-fill"></i>
-              </div>
-              <div>
-                <Link to={routes.BLOCKED} onClick={closeOffCanvas}>
+            </Link>
+            <Link to={routes.BLOCKED} onClick={closeOffCanvas}>
+              <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
+                <div className="py-2 px-4 rounded-lg bg-blue-800 inline-block text-white text-lg">
+                  <i className="bi bi-slash-circle-fill"></i>
+                </div>
+                <div>
                   <p className="font-semibold">Blocked Contacts</p>
                   <p className="text-sm text-gray-600">
                     List of your blocked contacts
                   </p>
-                </Link>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
-              <div className="py-2 px-4 rounded-lg bg-orange-400 inline-block text-white text-lg">
-                <i className="bi bi-plus-circle-fill"></i>
-              </div>
-              <div>
-                <Link to={routes.NEW_CONTACT} onClick={closeOffCanvas}>
+            </Link>
+            <Link to={routes.NEW_CONTACT} onClick={closeOffCanvas}>
+              <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
+                <div className="py-2 px-4 rounded-lg bg-orange-400 inline-block text-white text-lg">
+                  <i className="bi bi-plus-circle-fill"></i>
+                </div>
+                <div>
                   <p className="font-semibold">New Contact</p>
                   <p className="text-sm text-gray-600">Add a new connection</p>
-                </Link>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
-              <div className="py-2 px-4 rounded-lg bg-lime-800 inline-block text-white text-lg">
-                <i className="bi bi-floppy-fill"></i>
-              </div>
-              <div>
-                <Link to={routes.UPDATE_PROFILE} onClick={closeOffCanvas}>
+            </Link>
+            <Link to={routes.UPDATE_PROFILE} onClick={closeOffCanvas}>
+              <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
+                <div className="py-2 px-4 rounded-lg bg-lime-800 inline-block text-white text-lg">
+                  <i className="bi bi-floppy-fill"></i>
+                </div>
+                <div>
                   <p className="font-semibold">Update Profile</p>
                   <p className="text-sm text-gray-600">
-                    Update your personal information
+                    Update your personal information and email information
                   </p>
-                </Link>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
-              <div className="py-2 px-4 rounded-lg bg-red-800 inline-block text-white text-lg">
-                <i className="bi bi-gear-fill"></i>
-              </div>
-              <div className="flex flex-wrap">
-                <Link to={routes.SETTINGS} onClick={closeOffCanvas}>
+            </Link>
+            <Link to={routes.SETTINGS} onClick={closeOffCanvas}>
+              <div className="flex gap-5 items-center mb-1 hover:bg-gray-300 rounded p-2 cursor-pointer">
+                <div className="py-2 px-4 rounded-lg bg-red-800 inline-block text-white text-lg">
+                  <i className="bi bi-gear-fill"></i>
+                </div>
+                <div className="flex flex-wrap">
                   <p className="font-semibold">Settings</p>
                   <p className="text-sm text-gray-600">
                     All about account information and security
                   </p>
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="border-b-2 h-2 w-auto mx-4"></div>

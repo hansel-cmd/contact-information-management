@@ -43,7 +43,9 @@ const Navbar = () => {
 
   return (
     <div className="bg-primary-600 fixed top-0 w-full py-2 px-5 flex justify-between z-50">
+      <Link to={routes.INDEX}>
       <img src="/assets/logo512.png" alt="logo" className="w-[64px] h-[64px]" />
+      </Link>
       <div className="flex items-center">
         <label className="relative inline-flex items-center cursor-pointer me-4 pe-4 border-e-2 border-white">
           <input

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { TABLE_HEADERS, ADDRESSES } from "../constants/tableConstants";
 import { useModal } from "../hooks/useModal";
 import { useLocation, useNavigate } from "react-router";
-import { UPDATE_CONTACT } from "../routes/route";
+import { CONTACT_DETAIL, UPDATE_CONTACT } from "../routes/route";
 import { JUST_DELETE_OPTION } from "../constants/options";
 import {
   sendDELETERequest,
@@ -18,114 +18,7 @@ import {
 } from "../services/service";
 import { useToast } from "../hooks/useToast";
 import Toast from "../components/Toast";
-
-// const DUMMY = [
-//   {
-//     id: 1,
-//     firstName: "Katarina",
-//     lastName: "Yu",
-//     phoneNumber: "+63 927 123 1234",
-//     isFavorite: true,
-//     deliveryAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//     billingAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//   },
-//   {
-//     id: 2,
-//     firstName: "Katarina",
-//     lastName: "Yu",
-//     phoneNumber: "+63 927 123 1234",
-//     isFavorite: true,
-//     deliveryAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//     billingAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//   },
-//   {
-//     id: 3,
-//     firstName: "Katarina",
-//     lastName: "Yu",
-//     phoneNumber: "+63 927 123 1234",
-//     isFavorite: true,
-//     deliveryAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//     billingAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//   },
-//   {
-//     id: 4,
-//     firstName: "Katarina",
-//     lastName: "Yu",
-//     phoneNumber: "+63 927 123 1234",
-//     isFavorite: true,
-//     deliveryAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//     billingAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//   },
-//   {
-//     id: 5,
-//     firstName: "Katarina",
-//     lastName: "Yu",
-//     phoneNumber: "+63 927 123 1234",
-//     isFavorite: true,
-//     deliveryAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//     billingAddress: {
-//       houseNo: 719,
-//       street: "123 Manuel L. Quezon",
-//       city: "Mandaue",
-//       province: "Cebu",
-//       zipCode: 6014,
-//     },
-//   },
-// ];
+import { Link } from "react-router-dom";
 
 const lookUpParentVisibility = (parentKey, tableHeaders) => {
   const parent = tableHeaders.find((header) => header.key === parentKey);
@@ -400,7 +293,6 @@ const Home = () => {
   };
 
   const handleSearch = (e) => {
-    console.log("I AM SEARCHING...", e.target.value);
     setQuery(e.target.value);
   };
 
@@ -480,7 +372,7 @@ const Home = () => {
             {data.results.length !== 0 ? (
               data.results.map((data) => {
                 return (
-                  <tr key={data.id} className="text-center p-2">
+                  <tr key={data.id} className="text-center p-2 custom-group">
                     <td className="border border-collapse border-slate-400 p-2">
                       <input
                         type="checkbox"
@@ -493,25 +385,25 @@ const Home = () => {
                     {lookUpParentVisibility(
                       "firstName",
                       availableTableColumns
-                    ) && <TableDataRow data={data.firstName} />}
+                    ) && <TableDataRow data={data.firstName} id={data.id}/>}
                     {lookUpParentVisibility(
                       "lastName",
                       availableTableColumns
-                    ) && <TableDataRow data={data.lastName} />}
+                    ) && <TableDataRow data={data.lastName} id={data.id}/>}
                     {lookUpParentVisibility(
                       "phoneNumber",
                       availableTableColumns
-                    ) && <TableDataRow data={data.phoneNumber} />}
+                    ) && <TableDataRow data={data.phoneNumber} id={data.id}/>}
 
                     {lookUpParentVisibility(
                       "deliveryAddress",
                       availableTableColumns
-                    ) && <AddressTableDataRow data={data.deliveryAddress} />}
+                    ) && <AddressTableDataRow data={data.deliveryAddress} id={data.id}/>}
 
                     {lookUpParentVisibility(
                       "billingAddress",
                       availableTableColumns
-                    ) && <AddressTableDataRow data={data.billingAddress} />}
+                    ) && <AddressTableDataRow data={data.billingAddress} id={data.id}/>}
 
                     {lookUpParentVisibility(
                       "actions",

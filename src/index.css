@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.custom-group:hover {
+    @apply bg-slate-200;
+}
+
 .horizontal-line {
     width: 100%; 
     text-align: center; 

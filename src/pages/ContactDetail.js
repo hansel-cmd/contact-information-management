@@ -12,32 +12,13 @@ const ContactDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
-  const [contact, setContact] = useState({
-    profile: "",
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    favorite: "",
-    emergency: "",
-    blocked: "",
-    houseNo: "",
-    street: "",
-    city: "",
-    province: "",
-    zipCode: "",
-    delivery_houseNo: "",
-    delivery_street: "",
-    delivery_city: "",
-    delivery_province: "",
-    delivery_zipCode: "",
-  });
+  const [contact, setContact] = useState({});
 
   useEffect(() => {
     const getContact = async () => {
       setIsLoading(true);
       try {
         const response = await sendGETRequest(`contact/${id}/`);
-        console.log(response);
         if (response.status === 200) {
           setContact(response.data);
         }
@@ -96,7 +77,7 @@ const ContactDetail = () => {
                       ) : (
                         <div className="flex justify-center items-center m-h-[12rem] w-48 h-48 rounded-full bg-red-800">
                           <span className="text-6xl text-white">
-                            {/* {contact?.first_name[0].toUpperCase()} */}
+                            {contact?.first_name[0].toUpperCase()}
                           </span>
                         </div>
                       )}

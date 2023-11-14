@@ -18,8 +18,10 @@ import { useFetchContacts } from "../hooks/useFetchContacts";
 import { useContactMethods } from "../hooks/useContactMethods";
 import { useTableMethods } from "../hooks/useTableMethods";
 import { lookUpParentVisibility } from "../utils/utilities";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const BlockedContacts = () => {
+  useDocumentTitle("Synk: Blocked Contacts");
   const location = useLocation();
   const navigate = useNavigate();
   const { shouldShowModal, openModal, closeModal } = useModal();
@@ -176,15 +178,33 @@ const BlockedContacts = () => {
                     {lookUpParentVisibility(
                       "firstName",
                       availableTableColumns
-                    ) && <TableDataRow data={item.firstName} id={item.id} pathname={location.pathname}/>}
+                    ) && (
+                      <TableDataRow
+                        data={item.firstName}
+                        id={item.id}
+                        pathname={location.pathname}
+                      />
+                    )}
                     {lookUpParentVisibility(
                       "lastName",
                       availableTableColumns
-                    ) && <TableDataRow data={item.lastName} id={item.id} pathname={location.pathname}/>}
+                    ) && (
+                      <TableDataRow
+                        data={item.lastName}
+                        id={item.id}
+                        pathname={location.pathname}
+                      />
+                    )}
                     {lookUpParentVisibility(
                       "phoneNumber",
                       availableTableColumns
-                    ) && <TableDataRow data={item.phoneNumber} id={item.id} pathname={location.pathname}/>}
+                    ) && (
+                      <TableDataRow
+                        data={item.phoneNumber}
+                        id={item.id}
+                        pathname={location.pathname}
+                      />
+                    )}
 
                     {lookUpParentVisibility(
                       "deliveryAddress",

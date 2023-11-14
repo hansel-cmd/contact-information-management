@@ -9,9 +9,14 @@ import Spinner from "../components/Spinner";
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
-import { sendDELETERequest, sendPOSTRequest, sendPUTRequest } from "../services/service";
+import {
+  sendDELETERequest,
+  sendPOSTRequest,
+  sendPUTRequest,
+} from "../services/service";
 import { usePassword } from "../hooks/usePassword";
-import {removeExtraSpaces} from "../utils/utilities";
+import { removeExtraSpaces } from "../utils/utilities";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (
@@ -24,6 +29,7 @@ const modalFooterBody =
   "Leaving this page without verifying your email address won't allow you access to the application.";
 
 const Signup = () => {
+  useDocumentTitle("Synk: Sign Up");
   const [formActions, setFormActions] = useState(null);
   const { showToast, handleShowToast } = useToast(3000);
   const { shouldShowModal, openModal, closeModal } = useModal();
@@ -104,7 +110,12 @@ const Signup = () => {
   return (
     <div className="flex h-screen justify-center items-center">
       <div className="border-2 rounded w-[28rem] lg:w-[514px] p-5 shadow-lg dark:bg-primaryDark-700">
-        <h1 className="text-2xl font-bold pt-4 dark:text-fontDark-700">Create an account</h1>
+        <div className="front-horizontal-line text-sm text-white dark:bg-primaryDark-700">
+          <span className="">SYNK: HYPERLINE</span>
+        </div>
+        <h1 className="text-2xl font-bold pt-4 dark:text-fontDark-700">
+          Create an account
+        </h1>
         <p className="mb-4 text-gray-500 dark:text-fontDark-600">
           Enter your information to create your account
         </p>
@@ -128,7 +139,10 @@ const Signup = () => {
             <Form>
               <div className="flex flex-col lg:flex-row">
                 <div className="flex flex-col mb-4 lg:me-4 justify-between w-full flex-wrap">
-                  <label htmlFor="firstName" className="mb-1 dark:text-fontDark-600">
+                  <label
+                    htmlFor="firstName"
+                    className="mb-1 dark:text-fontDark-600"
+                  >
                     First Name
                   </label>
                   <ErrorMessage name="firstName">
@@ -139,11 +153,14 @@ const Signup = () => {
                     name="firstName"
                     type="text"
                     className="border-2 p-1 w-full"
-                    onBlur={(e) =>removeExtraSpaces(e, props)}
+                    onBlur={(e) => removeExtraSpaces(e, props)}
                   />
                 </div>
                 <div className="flex flex-col mb-4 justify-between w-full flex-wrap">
-                  <label htmlFor="lastName" className="mb-1 dark:text-fontDark-600">
+                  <label
+                    htmlFor="lastName"
+                    className="mb-1 dark:text-fontDark-600"
+                  >
                     Last Name
                   </label>
                   <ErrorMessage name="lastName">
@@ -154,7 +171,7 @@ const Signup = () => {
                     name="lastName"
                     type="text"
                     className="border-2 p-1 w-full"
-                    onBlur={(e) =>removeExtraSpaces(e, props)}
+                    onBlur={(e) => removeExtraSpaces(e, props)}
                   />
                 </div>
               </div>
@@ -173,7 +190,10 @@ const Signup = () => {
                 />
               </div>
               <div className="flex flex-col mb-4">
-                <label htmlFor="username" className="mb-1 dark:text-fontDark-600">
+                <label
+                  htmlFor="username"
+                  className="mb-1 dark:text-fontDark-600"
+                >
                   Username
                 </label>
                 <ErrorMessage name="username">
@@ -187,7 +207,10 @@ const Signup = () => {
                 />
               </div>
               <div className="flex flex-col mb-4 relative">
-                <label htmlFor="password" className="mb-1 dark:text-fontDark-600">
+                <label
+                  htmlFor="password"
+                  className="mb-1 dark:text-fontDark-600"
+                >
                   Password
                 </label>
                 <ErrorMessage name="password">
@@ -217,7 +240,10 @@ const Signup = () => {
                 </div>
               </div>
               <div className="flex flex-col mb-4 relative">
-                <label htmlFor="confirmPassword" className="mb-1 dark:text-fontDark-600">
+                <label
+                  htmlFor="confirmPassword"
+                  className="mb-1 dark:text-fontDark-600"
+                >
                   Confirm Password
                 </label>
                 <ErrorMessage name="confirmPassword">

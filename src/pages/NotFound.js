@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { INDEX } from "../routes/route";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const NotFound = () => {
+  useDocumentTitle("Synk Out");
   return (
     <div>
       <div className="h-screen flex flex-col items-center justify-center bg-not-found bg-cover">

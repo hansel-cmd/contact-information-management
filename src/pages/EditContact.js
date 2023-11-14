@@ -20,8 +20,10 @@ import { formatPhoneNumber } from "../utils/utilities";
 import { useToast } from "../hooks/useToast";
 import { useIcon } from "../hooks/useIcon";
 import handleSubmitContact from "../services/handleSubmitContact";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const EditContact = () => {
+  useDocumentTitle('Synk: Update Contact')
   const { id } = useParams();
   const navigate = useNavigate();
   const { shouldShowModal, closeModal, openModal } = useModal();

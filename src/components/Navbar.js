@@ -98,7 +98,7 @@ const Navbar = () => {
         <div className="absolute min-h-full w-full bg-black opacity-80"></div>
         <div className="fixed right-0 top-0 min-h-screen h-full w-96 opacity-100 bg-white dark:bg-primaryDark-700 overflow-y-auto transform duration-300 dark:text-fontDark-700">
           <div className="flex bg-white dark:bg-primaryDark-700 grow items-center px-4 pt-4 pb-2 justify-between border-b-2  ">
-            <h1 className="font-bold text-3xl ">Menu</h1>
+            <h1 className="font-bold text-3xl ">Synk: Menu</h1>
             <button className="text-2xl" onClick={closeOffCanvas}>
               <i className="bi bi-x-lg"></i>
             </button>

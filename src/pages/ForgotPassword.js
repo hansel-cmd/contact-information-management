@@ -15,6 +15,7 @@ import {
   sendPOSTRequest,
   sendPUTRequest,
 } from "../services/service";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (
@@ -25,6 +26,7 @@ const modalHeaderBody = (
 );
 
 const ForgotPassword = () => {
+  useDocumentTitle("Synk: Forgot Password");
   const { showToast, handleShowToast } = useToast(3000);
   const [isGeneratingToken, setIsGeneratingToken] = useState(false);
   const { shouldShowModal, closeModal, openModal } = useModal();
@@ -119,6 +121,9 @@ const ForgotPassword = () => {
   return (
     <div className="flex h-screen justify-center items-center">
       <div className="border-2 rounded w-80 sm:w-96 p-5 shadow-lg  dark:bg-primaryDark-700">
+        <div className="front-horizontal-line text-sm text-white dark:bg-primaryDark-700">
+          <span className="">SYNK: HYPERLINE</span>
+        </div>
         <button>
           <Link to={LOGIN}>
             <p className="text-4xl group dark:text-white">
@@ -186,7 +191,10 @@ const ForgotPassword = () => {
 
               <div className={showOthers ? "block" : "hidden"}>
                 <div className="flex flex-col mb-4 relative">
-                  <label htmlFor="password" className="mb-1 dark:text-fontDark-600">
+                  <label
+                    htmlFor="password"
+                    className="mb-1 dark:text-fontDark-600"
+                  >
                     New Password
                   </label>
                   <ErrorMessage name="password">
@@ -216,7 +224,10 @@ const ForgotPassword = () => {
                   </div>
                 </div>
                 <div className="flex flex-col mb-4 relative">
-                  <label htmlFor="confirmPassword" className="mb-1 dark:text-fontDark-600">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="mb-1 dark:text-fontDark-600"
+                  >
                     Confirm Password
                   </label>
                   <ErrorMessage name="confirmPassword">

@@ -17,8 +17,10 @@ import NumberField from "../components/NumberField";
 import handleSubmitContact from "../services/handleSubmitContact";
 import { getItem, removeItem } from "../services/localStorage";
 import { useLocation } from "react-router-dom";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const NewContact = () => {
+  useDocumentTitle('Synk: New Contact')
   //binary
   const [thumbnail, setThumbnail] = useState(undefined);
   const [image, setImage] = useState(null);
@@ -27,7 +29,6 @@ const NewContact = () => {
   const [message, setMessage] = useState("");
   const { icon, setIsError } = useIcon();
   const location = useLocation();
-  console.log("HELLO", location)
   const [showDialog, setShowDialog] = useState(false);
   const [showPrompt, confirmNavigation, cancelNavigation] =
     useCallbackPrompt(showDialog);

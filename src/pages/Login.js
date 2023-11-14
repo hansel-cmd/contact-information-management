@@ -13,6 +13,7 @@ import { useToast } from "../hooks/useToast";
 import Toast from "../components/Toast";
 import { INDEX } from "../routes/route";
 import { setItem } from "../services/localStorage";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const modalTitle = "Enter the 6-digit code";
 const modalHeaderBody = (
@@ -25,6 +26,7 @@ const modalFooterBody =
   "You must verify your email address before you can log in.";
 
 const Login = () => {
+  useDocumentTitle("Synk: Log In");
   const { user, setUser } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -127,6 +129,9 @@ const Login = () => {
   return (
     <div className="flex h-screen justify-center items-center">
       <div className="border-2 rounded w-80 sm:w-96 p-5 shadow-lg dark:bg-primaryDark-700">
+        <div className="front-horizontal-line text-sm text-white dark:bg-primaryDark-700">
+          <span className="">SYNK: HYPERLINE</span>
+        </div>
         <h1 className="text-2xl font-bold mb-4 pt-4 dark:text-fontDark-700">
           Sign in to your account
         </h1>
@@ -143,7 +148,10 @@ const Login = () => {
           {(props) => (
             <Form>
               <div className="flex flex-col mb-4">
-                <label htmlFor="username" className="mb-1 dark:text-fontDark-600">
+                <label
+                  htmlFor="username"
+                  className="mb-1 dark:text-fontDark-600"
+                >
                   Username
                 </label>
                 <ErrorMessage name="username">
@@ -157,7 +165,10 @@ const Login = () => {
                 />
               </div>
               <div className="flex flex-col mb-4 relative">
-                <label htmlFor="password" className="mb-1 dark:text-fontDark-600">
+                <label
+                  htmlFor="password"
+                  className="mb-1 dark:text-fontDark-600"
+                >
                   Password
                 </label>
                 <ErrorMessage name="password">

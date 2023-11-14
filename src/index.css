@@ -26,6 +26,26 @@
     padding:0 10px; 
 }
 
+.front-horizontal-line {
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px solid; 
+    @apply border-gray-800;
+    @apply dark:border-gray-200;
+    line-height: 0.1em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.front-horizontal-line span { 
+    @apply text-gray-800;
+    @apply bg-white;
+    @apply dark:bg-primaryDark-700;
+    @apply dark:text-gray-200;
+    padding:0 10px; 
+    @apply font-bold;
+}
+
 
 .animated-text {
     animation: transformText 5s infinite linear;

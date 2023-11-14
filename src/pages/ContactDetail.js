@@ -6,8 +6,10 @@ import { PatternFormat } from "react-number-format";
 import { sendGETRequest } from "../services/service";
 import { formatPhoneNumber } from "../utils/utilities";
 import { UPDATE_CONTACT, NOT_FOUND, INDEX } from "../routes/route";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const ContactDetail = () => {
+  useDocumentTitle("Synk: Contact Details");
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,9 +26,9 @@ const ContactDetail = () => {
         }
       } catch (error) {
         if (error.response?.status === 404) {
-            navigate(NOT_FOUND, { replace: true });
+          navigate(NOT_FOUND, { replace: true });
         } else {
-            navigate(INDEX, { replace: true });
+          navigate(INDEX, { replace: true });
         }
       }
       setIsLoading(false);

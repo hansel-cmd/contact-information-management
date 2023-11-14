@@ -18,8 +18,10 @@ import { useFetchContacts } from "../hooks/useFetchContacts";
 import { useContactMethods } from "../hooks/useContactMethods";
 import { useTableMethods } from "../hooks/useTableMethods";
 import { lookUpParentVisibility } from "../utils/utilities";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const Home = () => {
+  useDocumentTitle("Synk: All Contacts");
   const location = useLocation();
   const navigate = useNavigate();
   const { shouldShowModal, openModal, closeModal } = useModal();
@@ -45,7 +47,7 @@ const Home = () => {
     handlePageSizeSelect,
     handlePageChange,
     setData,
-  } = useFetchContacts({query});
+  } = useFetchContacts({ query });
 
   const {
     shouldShowModal: shouldShowModalForSelected,

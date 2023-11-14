@@ -13,7 +13,7 @@ const Navbar = () => {
   const { user, setUser } = useContext(AuthContext);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [showOffCanvas, setShowOffCanvas] = useState(false);
-  const color = useProfileColor(user.first_name)
+  const color = useProfileColor(user.first_name);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -46,7 +46,11 @@ const Navbar = () => {
   return (
     <div className="bg-primary-600 dark:bg-primaryDark-700 fixed top-0 w-full py-2 px-5 flex justify-between z-50">
       <Link to={routes.INDEX}>
-      <img src="/assets/logo512.png" alt="logo" className="w-[64px] h-[64px]" />
+        <img
+          src="/assets/logo512.png"
+          alt="logo"
+          className="w-[64px] h-[64px]"
+        />
       </Link>
       <div className="flex items-center">
         <label className="relative inline-flex items-center cursor-pointer me-4 pe-4 border-e-2 border-white dark:border-fontDark-600">
@@ -72,12 +76,16 @@ const Navbar = () => {
             ></i>
           </span>
         </label>
-        <p className="text-white dark:text-fontDark-600">Hello, {user?.first_name}!</p>
+        <p className="text-white dark:text-fontDark-600">
+          Hello, {user?.first_name}!
+        </p>
         <span
           className={`flex justify-center items-center h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer bg-${color}-800`}
           onClick={openOffCanvas}
         >
-          <span className="text-white text-xl">{user.first_name && user?.first_name[0].toUpperCase()}</span>
+          <span className="text-white text-xl">
+            {user.first_name && user?.first_name[0].toUpperCase()}
+          </span>
         </span>
       </div>
 
@@ -99,7 +107,9 @@ const Navbar = () => {
             {user.profile ? (
               <img src={user.profile} alt="" className="w-32 h-32 rounded-lg" />
             ) : (
-              <div className={`w-32 min-w-[8rem] h-32 rounded-lg bg-${color}-800 flex justify-center items-center`}>
+              <div
+                className={`w-32 min-w-[8rem] h-32 rounded-lg bg-${color}-800 flex justify-center items-center`}
+              >
                 <span className="text-6xl inline-block text-white">
                   {user.first_name && user?.first_name[0].toUpperCase()}
                 </span>
@@ -125,9 +135,14 @@ const Navbar = () => {
                 <span className="me-2">
                   <i className="bi bi-telephone-fill"></i>
                 </span>
-                {user?.phone_number ? formatPhoneNumber(user.phone_number) : '-- (---) -------'}
+                {user?.phone_number
+                  ? formatPhoneNumber(user.phone_number)
+                  : "-- (---) -------"}
               </p>
-              <button className="rounded px-1 py-1 mt-2 w-full border-2 border-gray-500 hover:bg-gray-500 hover:text-white" onClick={handleLogout}>
+              <button
+                className="rounded px-1 py-1 mt-2 w-full border-2 border-gray-500 hover:bg-gray-500 hover:text-white"
+                onClick={handleLogout}
+              >
                 Sign Out
               </button>
             </div>
@@ -142,7 +157,9 @@ const Navbar = () => {
                 </div>
                 <div>
                   <p className="font-semibold">All Contacts</p>
-                  <p className="text-sm text-gray-600 dark:text-fontDark-600">List of your contacts</p>
+                  <p className="text-sm text-gray-600 dark:text-fontDark-600">
+                    List of your contacts
+                  </p>
                 </div>
               </div>
             </Link>
@@ -192,7 +209,9 @@ const Navbar = () => {
                 </div>
                 <div>
                   <p className="font-semibold">New Contact</p>
-                  <p className="text-sm text-gray-600 dark:text-fontDark-600">Add a new connection</p>
+                  <p className="text-sm text-gray-600 dark:text-fontDark-600">
+                    Add a new connection
+                  </p>
                 </div>
               </div>
             </Link>

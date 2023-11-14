@@ -1,10 +1,10 @@
 import TableDataRow from "./TableDataRow";
 
-const AddressTableDataRow = ({ data, id }) => {
+const AddressTableDataRow = ({ data, id, pathname }) => {
   return (
     <>
       {Object.keys(data).map((key, index) => (
-        <TableDataRow key={index} data={data[key]} id={id}></TableDataRow>
+        <TableDataRow key={index} data={data[key]} id={id} pathname={pathname}></TableDataRow>
       ))}
     </>
   );

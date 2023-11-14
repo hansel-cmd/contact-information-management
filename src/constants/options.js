@@ -39,56 +39,32 @@ export const ALL_OPTIONS = [
 export const FAVORITES_OPTIONS = [
     {
         key: 'delete',
-        name: 'Delete'
+        name: 'Delete selected contacts'
     },
     {
         key: 'unfavorite',
-        name: 'Unfavorite'
-    },
-    {
-        key: 'emergency',
-        name: 'Add as Emergency C.'
-    },
-    {
-        key: 'unemergency',
-        name: 'Unemergency'
-    },
-    {
-        key: 'block',
-        name: 'Block'
+        name: 'Unfavorite selected contacts'
     },
 ]
 
 export const EMERGENCY_OPTIONS = [
     {
         key: 'delete',
-        name: 'Delete'
-    },
-    {
-        key: 'favorite',
-        name: 'Add to Favorites'
-    },
-    {
-        key: 'unfavorite',
-        name: 'Unfavorite'
+        name: 'Delete selected contacts'
     },
     {
         key: 'unemergency',
-        name: 'Unemergency'
-    },
-    {
-        key: 'block',
-        name: 'Block'
+        name: 'Unemergency selected contacts'
     },
 ]
 
 export const BLOCK_OPTIONS = [
     {
         key: 'delete',
-        name: 'Delete'
+        name: 'Delete selected contacts'
     },
     {
         key: 'unblock',
-        name: 'Unblock'
+        name: 'Unblock selected contacts'
     },
 ]

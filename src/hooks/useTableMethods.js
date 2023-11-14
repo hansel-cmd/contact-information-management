@@ -7,11 +7,14 @@ export const useTableMethods = ({
   currentPage,
   setDataIdsChecked,
   handleDelete,
+  handleFavorite,
+  handleEmergency,
+  handleBlock,
   handlePageChange,
   openModalForSelected,
-  closeModalForSelected
+  closeModalForSelected,
 }) => {
-    const [isDeletingSelected, setIsDeletingSelected] = useState(false);
+  const [isDeletingSelected, setIsDeletingSelected] = useState(false);
   const [areAllChecked, setAreAllChecked] = useState(false);
   const handleCheckAll = (e) => {
     setAreAllChecked(e.target.checked);
@@ -19,6 +22,15 @@ export const useTableMethods = ({
 
   const handleSelectedOptions = (method) => {
     if (method === "delete") openModalForSelected();
+    if (method === "unfavorite") {
+      handleFavoriteSelected();
+    }
+    if (method === "unemergency") {
+      handleEmergencySelected();
+    }
+    if (method === "unblock") {
+      handleBlockSelected();
+    }
   };
 
   const handleCheckBox = (e) => {
@@ -52,6 +64,36 @@ export const useTableMethods = ({
     }
 
     setIsDeletingSelected(false);
+    closeModalForSelected();
+  };
+
+  const handleBlockSelected = async () => {
+    try {
+      await Promise.allSettled(dataIdsChecked.map((id) => handleBlock(id)));
+    } catch (error) {
+      console.log("error handling blocking/unblocking all contacts", error);
+    }
+
+    closeModalForSelected();
+  };
+
+  const handleEmergencySelected = async () => {
+    try {
+      await Promise.allSettled(dataIdsChecked.map((id) => handleEmergency(id)));
+    } catch (error) {
+      console.log("error handling un/emergency-ing all contacts", error);
+    }
+
+    closeModalForSelected();
+  };
+
+  const handleFavoriteSelected = async () => {
+    try {
+      await Promise.allSettled(dataIdsChecked.map((id) => handleFavorite(id)));
+    } catch (error) {
+      console.log("error favoriting/unfavoriting all contacts", error);
+    }
+
     closeModalForSelected();
   };
 

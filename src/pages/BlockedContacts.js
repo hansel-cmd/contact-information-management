@@ -10,7 +10,7 @@ import { ADDRESSES } from "../constants/tableConstants";
 import { useModal } from "../hooks/useModal";
 import { useLocation, useNavigate } from "react-router";
 import { UPDATE_CONTACT } from "../routes/route";
-import { JUST_DELETE_OPTION } from "../constants/options";
+import { BLOCK_OPTIONS } from "../constants/options";
 import { useToast } from "../hooks/useToast";
 import Toast from "../components/Toast";
 import { useActionTab } from "../hooks/useActionTab";
@@ -80,6 +80,7 @@ const BlockedContacts = () => {
     currentPage,
     setDataIdsChecked,
     handleDelete,
+    handleBlock,
     handlePageChange,
     openModalForSelected,
     closeModalForSelected,
@@ -96,7 +97,7 @@ const BlockedContacts = () => {
         availableTableColumns={availableTableColumns}
         dataIdsChecked={dataIdsChecked}
         handleSelectedOptions={handleSelectedOptions}
-        availableOptions={JUST_DELETE_OPTION}
+        availableOptions={BLOCK_OPTIONS}
         from={"blocked"}
       ></ActionTab>
 
@@ -175,15 +176,15 @@ const BlockedContacts = () => {
                     {lookUpParentVisibility(
                       "firstName",
                       availableTableColumns
-                    ) && <TableDataRow data={item.firstName} id={item.id} />}
+                    ) && <TableDataRow data={item.firstName} id={item.id} pathname={location.pathname}/>}
                     {lookUpParentVisibility(
                       "lastName",
                       availableTableColumns
-                    ) && <TableDataRow data={item.lastName} id={item.id} />}
+                    ) && <TableDataRow data={item.lastName} id={item.id} pathname={location.pathname}/>}
                     {lookUpParentVisibility(
                       "phoneNumber",
                       availableTableColumns
-                    ) && <TableDataRow data={item.phoneNumber} id={item.id} />}
+                    ) && <TableDataRow data={item.phoneNumber} id={item.id} pathname={location.pathname}/>}
 
                     {lookUpParentVisibility(
                       "deliveryAddress",
@@ -192,6 +193,7 @@ const BlockedContacts = () => {
                       <AddressTableDataRow
                         data={item.deliveryAddress}
                         id={item.id}
+                        pathname={location.pathname}
                       />
                     )}
 
@@ -202,6 +204,7 @@ const BlockedContacts = () => {
                       <AddressTableDataRow
                         data={item.billingAddress}
                         id={item.id}
+                        pathname={location.pathname}
                       />
                     )}
 

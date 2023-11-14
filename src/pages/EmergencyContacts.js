@@ -10,7 +10,7 @@ import { ADDRESSES } from "../constants/tableConstants";
 import { useModal } from "../hooks/useModal";
 import { useLocation, useNavigate } from "react-router";
 import { UPDATE_CONTACT } from "../routes/route";
-import { JUST_DELETE_OPTION } from "../constants/options";
+import { EMERGENCY_OPTIONS } from "../constants/options";
 import { useToast } from "../hooks/useToast";
 import Toast from "../components/Toast";
 import { useActionTab } from "../hooks/useActionTab";
@@ -80,6 +80,7 @@ const EmergencyContacts = () => {
     currentPage,
     setDataIdsChecked,
     handleDelete,
+    handleEmergency,
     handlePageChange,
     openModalForSelected,
     closeModalForSelected,
@@ -96,7 +97,7 @@ const EmergencyContacts = () => {
         availableTableColumns={availableTableColumns}
         dataIdsChecked={dataIdsChecked}
         handleSelectedOptions={handleSelectedOptions}
-        availableOptions={JUST_DELETE_OPTION}
+        availableOptions={EMERGENCY_OPTIONS}
         from={"emergency"}
       ></ActionTab>
 
@@ -175,15 +176,33 @@ const EmergencyContacts = () => {
                     {lookUpParentVisibility(
                       "firstName",
                       availableTableColumns
-                    ) && <TableDataRow data={item.firstName} id={item.id} />}
+                    ) && (
+                      <TableDataRow
+                        data={item.firstName}
+                        id={item.id}
+                        pathname={location.pathname}
+                      />
+                    )}
                     {lookUpParentVisibility(
                       "lastName",
                       availableTableColumns
-                    ) && <TableDataRow data={item.lastName} id={item.id} />}
+                    ) && (
+                      <TableDataRow
+                        data={item.lastName}
+                        id={item.id}
+                        pathname={location.pathname}
+                      />
+                    )}
                     {lookUpParentVisibility(
                       "phoneNumber",
                       availableTableColumns
-                    ) && <TableDataRow data={item.phoneNumber} id={item.id} />}
+                    ) && (
+                      <TableDataRow
+                        data={item.phoneNumber}
+                        id={item.id}
+                        pathname={location.pathname}
+                      />
+                    )}
 
                     {lookUpParentVisibility(
                       "deliveryAddress",
@@ -192,6 +211,7 @@ const EmergencyContacts = () => {
                       <AddressTableDataRow
                         data={item.deliveryAddress}
                         id={item.id}
+                        pathname={location.pathname}
                       />
                     )}
 
@@ -202,6 +222,7 @@ const EmergencyContacts = () => {
                       <AddressTableDataRow
                         data={item.billingAddress}
                         id={item.id}
+                        pathname={location.pathname}
                       />
                     )}
 

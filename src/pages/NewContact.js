@@ -16,6 +16,7 @@ import FileUploadContainer from "../components/FileUploadContainer";
 import NumberField from "../components/NumberField";
 import handleSubmitContact from "../services/handleSubmitContact";
 import { getItem, removeItem } from "../services/localStorage";
+import { useLocation } from "react-router-dom";
 
 const NewContact = () => {
   //binary
@@ -25,6 +26,8 @@ const NewContact = () => {
   const { showToast, handleShowToast } = useToast(3000);
   const [message, setMessage] = useState("");
   const { icon, setIsError } = useIcon();
+  const location = useLocation();
+  console.log("HELLO", location)
   const [showDialog, setShowDialog] = useState(false);
   const [showPrompt, confirmNavigation, cancelNavigation] =
     useCallbackPrompt(showDialog);
@@ -71,8 +74,8 @@ const NewContact = () => {
             delivery_city: "",
             delivery_province: "",
             delivery_zipCode: "",
-            favorite: false,
-            emergency: false,
+            favorite: location.state === 'favorite',
+            emergency: location.state === 'emergency',
           }}
           onSubmit={handleSubmit}
           validationSchema={CombinedSchema}

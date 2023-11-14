@@ -27,6 +27,7 @@ const FavoriteContacts = () => {
     const [message, setMessage] = useState("");
     const [icon, setIcon] = useState("");
     const [idToBeDeleted, setIdToBeDeleted] = useState(null);
+    const [changes, setChanges] = useState(0)
   
     const {
       query,
@@ -44,7 +45,7 @@ const FavoriteContacts = () => {
       handlePageSizeSelect,
       handlePageChange,
       setData,
-    } = useFetchContacts(query);
+    } = useFetchContacts({query, changes, isFavorite: 1});
     const {
       shouldShowModal: shouldShowModalForSelected,
       openModal: openModalForSelected,
@@ -62,6 +63,7 @@ const FavoriteContacts = () => {
         setIcon,
         setMessage,
         handleShowToast,
+        setChanges,
       });
   
     const {
@@ -98,6 +100,7 @@ const FavoriteContacts = () => {
           dataIdsChecked={dataIdsChecked}
           handleSelectedOptions={handleSelectedOptions}
           availableOptions={JUST_DELETE_OPTION}
+          from={'favorite'}
         ></ActionTab>
   
         <div className="overflow-x-auto flex-1">

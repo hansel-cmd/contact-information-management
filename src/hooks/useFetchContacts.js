@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { sendGETRequest } from "../services/service";
 
-export const useFetchContacts = (query) => {
+export const useFetchContacts = ({
+  query,
+  changes,
+  isFavorite = false,
+  isBlocked = false,
+  isEmergency = false,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [data, setData] = useState({
@@ -21,11 +27,22 @@ export const useFetchContacts = (query) => {
 
   useEffect(() => {
     const getContacts = async () => {
+      let queryParams = `&limit=${pageSize}&page=${currentPage}`;
+      if (isFavorite) {
+        queryParams += `&isFavorite=${1}`;
+      }
+
+      if (isBlocked) {
+        queryParams += `&isBlocked=${1}`;
+      }
+
+      if (isEmergency) {
+        queryParams += `&isEmergency=${1}`;
+      }
+
       try {
         const response = await sendGETRequest(
-          `/search-contacts/?q=${encodeURIComponent(
-            query
-          )}&limit=${pageSize}&page=${currentPage}`
+          `/search-contacts/?q=${encodeURIComponent(query)}${queryParams}`
         );
         console.log(response.data);
         setData(response.data);
@@ -37,7 +54,16 @@ export const useFetchContacts = (query) => {
       }
     };
     getContacts();
-  }, [pageSize, currentPage, data.count, query]);
+  }, [
+    pageSize,
+    currentPage,
+    data.count,
+    query,
+    changes,
+    isFavorite,
+    isBlocked,
+    isEmergency
+  ]);
 
   return {
     currentPage,
@@ -46,5 +72,5 @@ export const useFetchContacts = (query) => {
     handlePageSizeSelect,
     handlePageChange,
     setData,
-  }
+  };
 };

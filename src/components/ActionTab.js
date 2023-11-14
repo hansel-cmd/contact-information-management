@@ -13,6 +13,7 @@ const ActionTab = ({
   dataIdsChecked,
   handleSelectedOptions,
   availableOptions,
+  from = null,
 }) => {
   const [showColumnSettings, setShowColumnSettings] = useState(false);
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const ActionTab = ({
       <div className="mb-10 flex gap-5 items-center flex-wrap">
         <button
           className="bg-primary-600 hover:bg-primary-700 dark:bg-primaryDark-700 dark:hover:bg-accentDark-700 text-white p-2 rounded-lg"
-          onClick={() => navigate(NEW_CONTACT)}
+          onClick={() => navigate(NEW_CONTACT, { state: from })}
         >
           <span>
             <i className="bi bi-plus-lg"></i>

@@ -19,7 +19,6 @@ import { useContactMethods } from "../hooks/useContactMethods";
 import { useTableMethods } from "../hooks/useTableMethods";
 import { lookUpParentVisibility } from "../utils/utilities";
 
-
 const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,6 +37,7 @@ const Home = () => {
     handleTableColumnUpdate,
     setDataIdsChecked,
   } = useActionTab();
+
   const {
     currentPage,
     pageSize,
@@ -45,7 +45,8 @@ const Home = () => {
     handlePageSizeSelect,
     handlePageChange,
     setData,
-  } = useFetchContacts(query);
+  } = useFetchContacts({query});
+
   const {
     shouldShowModal: shouldShowModalForSelected,
     openModal: openModalForSelected,

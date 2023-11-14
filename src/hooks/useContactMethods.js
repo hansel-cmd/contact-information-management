@@ -10,6 +10,7 @@ export const useContactMethods = ({
   setIcon,
   setMessage,
   handleShowToast,
+  setChanges,
 }) => {
   const handleDelete = async (selectedId) => {
     const id = selectedId ?? idToBeDeleted;
@@ -58,6 +59,8 @@ export const useContactMethods = ({
         });
 
         setData({ ...data, results: updatedResults });
+        if (typeof setChanges === "function")
+          setChanges((current) => current + 1);
         setIcon("bi bi-check-circle-fill text-green-500");
         setMessage(
           previousValue === true
@@ -95,6 +98,8 @@ export const useContactMethods = ({
         });
 
         setData({ ...data, results: updatedResults });
+        if (typeof setChanges === "function")
+          setChanges((current) => current + 1);
         setIcon("bi bi-check-circle-fill text-green-500");
         setMessage(
           previousValue === true
@@ -132,6 +137,8 @@ export const useContactMethods = ({
         });
 
         setData({ ...data, results: updatedResults });
+        if (typeof setChanges === "function")
+          setChanges((current) => current + 1);
         setIcon("bi bi-check-circle-fill text-green-500");
         setMessage(
           previousValue === true
@@ -143,6 +150,7 @@ export const useContactMethods = ({
       if (error?.response?.status === 400) {
         setMessage(error?.response?.data.error);
       } else {
+        console.log(error);
         setMessage("Cannot perform action. Please try again later.");
       }
       setIcon("bi bi-x-circle-fill text-red-500");

@@ -103,9 +103,9 @@ const Signup = () => {
 
   return (
     <div className="flex h-screen justify-center items-center">
-      <div className="border-2 rounded w-[28rem] lg:w-[514px] p-5 shadow-lg">
-        <h1 className="text-2xl font-bold pt-4">Create an account</h1>
-        <p className="mb-4 text-gray-500">
+      <div className="border-2 rounded w-[28rem] lg:w-[514px] p-5 shadow-lg dark:bg-primaryDark-700">
+        <h1 className="text-2xl font-bold pt-4 dark:text-fontDark-700">Create an account</h1>
+        <p className="mb-4 text-gray-500 dark:text-fontDark-600">
           Enter your information to create your account
         </p>
         <ErrorMessageContainer
@@ -128,7 +128,7 @@ const Signup = () => {
             <Form>
               <div className="flex flex-col lg:flex-row">
                 <div className="flex flex-col mb-4 lg:me-4 justify-between w-full flex-wrap">
-                  <label htmlFor="firstName" className="mb-1">
+                  <label htmlFor="firstName" className="mb-1 dark:text-fontDark-600">
                     First Name
                   </label>
                   <ErrorMessage name="firstName">
@@ -143,7 +143,7 @@ const Signup = () => {
                   />
                 </div>
                 <div className="flex flex-col mb-4 justify-between w-full flex-wrap">
-                  <label htmlFor="lastName" className="mb-1">
+                  <label htmlFor="lastName" className="mb-1 dark:text-fontDark-600">
                     Last Name
                   </label>
                   <ErrorMessage name="lastName">
@@ -159,7 +159,7 @@ const Signup = () => {
                 </div>
               </div>
               <div className="flex flex-col mb-4">
-                <label htmlFor="email" className="mb-1">
+                <label htmlFor="email" className="mb-1 dark:text-fontDark-600">
                   Email Address
                 </label>
                 <ErrorMessage name="email">
@@ -173,7 +173,7 @@ const Signup = () => {
                 />
               </div>
               <div className="flex flex-col mb-4">
-                <label htmlFor="username" className="mb-1">
+                <label htmlFor="username" className="mb-1 dark:text-fontDark-600">
                   Username
                 </label>
                 <ErrorMessage name="username">
@@ -187,7 +187,7 @@ const Signup = () => {
                 />
               </div>
               <div className="flex flex-col mb-4 relative">
-                <label htmlFor="password" className="mb-1">
+                <label htmlFor="password" className="mb-1 dark:text-fontDark-600">
                   Password
                 </label>
                 <ErrorMessage name="password">
@@ -217,7 +217,7 @@ const Signup = () => {
                 </div>
               </div>
               <div className="flex flex-col mb-4 relative">
-                <label htmlFor="confirmPassword" className="mb-1">
+                <label htmlFor="confirmPassword" className="mb-1 dark:text-fontDark-600">
                   Confirm Password
                 </label>
                 <ErrorMessage name="confirmPassword">
@@ -259,8 +259,8 @@ const Signup = () => {
             </Form>
           )}
         </Formik>
-        <div className="border-x-4 h-1 my-2"></div>
-        <div className="border-t-2 pt-4">
+        <div className="h-1 my-2"></div>
+        <div className="border-t-2 pt-4 dark:text-fontDark-600">
           <p>
             Already have an account?
             <span className="text-blue-700 font-semibold ms-1">

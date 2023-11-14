@@ -5,7 +5,8 @@
 @tailwind utilities;
 
 .custom-group:hover {
-    @apply bg-slate-200;
+    @apply bg-slate-200 !important;
+    @apply  outline-[1px] outline-slate-900 outline !important;
 }
 
 .horizontal-line {
@@ -21,6 +22,7 @@
 .horizontal-line span { 
     @apply text-gray-200;
     @apply bg-primary-600;
+    @apply dark:bg-primaryDark-700;
     padding:0 10px; 
 }
 

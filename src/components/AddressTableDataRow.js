@@ -1,24 +1,11 @@
-import { Link } from "react-router-dom";
-import { CONTACT_DETAIL } from "../routes/route";
+import TableDataRow from "./TableDataRow";
 
 const AddressTableDataRow = ({ data, id }) => {
   return (
     <>
-      <td className="border border-collapse border-slate-400 p-2">
-        <Link to={CONTACT_DETAIL.replace(":id", id)}>{data.houseNo}</Link>
-      </td>
-      <td className="border border-collapse border-slate-400 p-2">
-        <Link to={CONTACT_DETAIL.replace(":id", id)}>{data.street}</Link>
-      </td>
-      <td className="border border-collapse border-slate-400 p-2">
-        <Link to={CONTACT_DETAIL.replace(":id", id)}>{data.city}</Link>
-      </td>
-      <td className="border border-collapse border-slate-400 p-2">
-        <Link to={CONTACT_DETAIL.replace(":id", id)}>{data.province}</Link>
-      </td>
-      <td className="border border-collapse border-slate-400 p-2">
-        <Link to={CONTACT_DETAIL.replace(":id", id)}>{data.zipCode}</Link>
-      </td>
+      {Object.keys(data).map((key, index) => (
+        <TableDataRow key={index} data={data[key]} id={id}></TableDataRow>
+      ))}
     </>
   );
 };

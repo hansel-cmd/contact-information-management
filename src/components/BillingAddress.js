@@ -16,7 +16,7 @@ const BillingAddress = ({ onBlur }) => {
             id="houseNo"
             name="houseNo"
             type="text"
-            className="border-2 p-1"
+            className="border-2 p-1 dark:text-black"
             onBlur={onBlur}
           />
         </div>
@@ -31,7 +31,7 @@ const BillingAddress = ({ onBlur }) => {
             id="street"
             name="street"
             type="text"
-            className="border-2 p-1"
+            className="border-2 p-1 dark:text-black"
             onBlur={onBlur}
           />
         </div>
@@ -46,7 +46,7 @@ const BillingAddress = ({ onBlur }) => {
             id="city"
             name="city"
             type="text"
-            className="border-2 p-1"
+            className="border-2 p-1 dark:text-black"
             onBlur={onBlur}
           />
         </div>
@@ -64,7 +64,7 @@ const BillingAddress = ({ onBlur }) => {
             id="province"
             name="province"
             type="text"
-            className="border-2 p-1"
+            className="border-2 p-1 dark:text-black"
             onBlur={onBlur}
           />
         </div>
@@ -79,7 +79,7 @@ const BillingAddress = ({ onBlur }) => {
             id="zipCode"
             name="zipCode"
             type="text"
-            className="border-2 p-1"
+            className="border-2 p-1 dark:text-black"
             onBlur={onBlur}
           />
         </div>

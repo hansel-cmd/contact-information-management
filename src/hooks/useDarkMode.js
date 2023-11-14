@@ -19,6 +19,9 @@ export const useDarkMode = () => {
   useEffect(() => {
     const item = localStorage.getItem("darkMode");
     if (!item) return;
+    const root = document.getElementsByTagName("html")[0];
+    root.classList.add("dark");
+    localStorage.setItem("darkMode", "ON");
     setIsDarkMode(true);
   }, []);
 

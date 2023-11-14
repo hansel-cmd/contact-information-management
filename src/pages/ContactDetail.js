@@ -45,7 +45,7 @@ const ContactDetail = () => {
         </Link>
       </button>
       <PageTitle icon={"bi bi-person-badge-fill"} title={"Contact Details"} />
-      <div className="p-5 shadow-lg border-2 rounded-lg">
+      <div className="p-5 shadow-lg border-2 rounded-lg dark:bg-primaryDark-700 dark:text-fontDark-700">
         {isLoading ? (
           <div className="h-96 flex items-center justify-center">
             <div className="w-">
@@ -86,7 +86,7 @@ const ContactDetail = () => {
 
                   <div className="pt-4">
                     <div className="flex flex-col mb-4">
-                      <label htmlFor="firstName" className="mb-1">
+                      <label htmlFor="firstName" className="mb-1 ">
                         First Name
                       </label>
 
@@ -94,7 +94,7 @@ const ContactDetail = () => {
                         id="firstName"
                         name="firstName"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.first_name}
                         disabled={true}
                       />
@@ -108,7 +108,7 @@ const ContactDetail = () => {
                         id="lastName"
                         name="lastName"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.last_name}
                         disabled={true}
                       />
@@ -124,7 +124,7 @@ const ContactDetail = () => {
                       type="tel"
                       format="+63 (###) ###-####"
                       mask="_"
-                      className="border-2 p-1 disabled:bg-gray-200"
+                      className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                       value={formatPhoneNumber(contact.phone_number)}
                       placeholder="+63 (xxx) xxx-xxxx"
                     />
@@ -193,7 +193,7 @@ const ContactDetail = () => {
                         id="houseNo"
                         name="houseNo"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.house_no}
                         disabled={true}
                       />
@@ -206,7 +206,7 @@ const ContactDetail = () => {
                         id="street"
                         name="street"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.street}
                         disabled={true}
                       />
@@ -219,7 +219,7 @@ const ContactDetail = () => {
                         id="city"
                         name="city"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.city}
                         disabled={true}
                       />
@@ -235,7 +235,7 @@ const ContactDetail = () => {
                         id="province"
                         name="province"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.province}
                         disabled={true}
                       />
@@ -248,7 +248,7 @@ const ContactDetail = () => {
                         id="zipCode"
                         name="zipCode"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.zipcode}
                         disabled={true}
                       />
@@ -270,7 +270,7 @@ const ContactDetail = () => {
                         id="delivery_houseNo"
                         name="delivery_houseNo"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.delivery_house_no}
                         disabled={true}
                       />
@@ -284,7 +284,7 @@ const ContactDetail = () => {
                         id="delivery_street"
                         name="delivery_street"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.delivery_street}
                         disabled={true}
                       />
@@ -298,7 +298,7 @@ const ContactDetail = () => {
                         id="delivery_city"
                         name="delivery_city"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.delivery_city}
                         disabled={true}
                       />
@@ -315,7 +315,7 @@ const ContactDetail = () => {
                         id="delivery_province"
                         name="delivery_province"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.delivery_province}
                         disabled={true}
                       />
@@ -329,7 +329,7 @@ const ContactDetail = () => {
                         id="delivery_zipCode"
                         name="delivery_zipCode"
                         type="text"
-                        className="border-2 p-1 disabled:bg-gray-200"
+                        className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                         value={contact.delivery_zipcode}
                         disabled={true}
                       />

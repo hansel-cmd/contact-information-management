@@ -16,13 +16,15 @@ import AuthContext from "./context/authContext";
 import ProtectedRoute from "./ProtectedRoute";
 import IsNotAuthenticated from "./isNotAuthenticated";
 import ContactDetail from "./pages/ContactDetail";
+import { useDarkMode } from "./hooks/useDarkMode";
 
 function App() {
   const [user, setUser] = useState({});
+  useDarkMode();
   const Provider = AuthContext.Provider;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-gray-400">
       <Provider value={{ user, setUser }}>
         <BrowserRouter>
           <Routes>

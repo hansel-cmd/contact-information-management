@@ -24,7 +24,7 @@ const ActionTab = ({
     <>
       <div className="mb-10 flex gap-5 items-center flex-wrap">
         <button
-          className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-lg"
+          className="bg-primary-600 hover:bg-primary-700 dark:bg-primaryDark-700 dark:hover:bg-accentDark-700 text-white p-2 rounded-lg"
           onClick={() => navigate(NEW_CONTACT)}
         >
           <span>
@@ -86,7 +86,7 @@ const ActionTab = ({
 
         <div className="relative text-left">
           <button
-            className="relative group bg-primary-600 px-2 py-1 rounded-md hover:bg-primary-700"
+            className="relative group bg-primary-600 px-2 py-1 rounded-md hover:bg-primary-700 dark:bg-primaryDark-700 dark:hover:bg-accentDark-600"
             onClick={() => setShowColumnSettings((current) => !current)}
           >
             <ToolTip
@@ -99,7 +99,7 @@ const ActionTab = ({
           <div
             className={`${
               showColumnSettings ? "block" : "hidden"
-            } absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+            } absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-primaryDark-500 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none `}
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="menu-button"

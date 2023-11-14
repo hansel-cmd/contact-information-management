@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { TABLE_HEADERS, ADDRESSES } from "../constants/tableConstants";
 import { useModal } from "../hooks/useModal";
 import { useLocation, useNavigate } from "react-router";
-import { CONTACT_DETAIL, UPDATE_CONTACT } from "../routes/route";
+import { UPDATE_CONTACT } from "../routes/route";
 import { JUST_DELETE_OPTION } from "../constants/options";
 import {
   sendDELETERequest,
@@ -18,7 +18,6 @@ import {
 } from "../services/service";
 import { useToast } from "../hooks/useToast";
 import Toast from "../components/Toast";
-import { Link } from "react-router-dom";
 
 const lookUpParentVisibility = (parentKey, tableHeaders) => {
   const parent = tableHeaders.find((header) => header.key === parentKey);
@@ -318,14 +317,14 @@ const Home = () => {
       ></ActionTab>
 
       <div className="overflow-x-auto flex-1">
-        <table className="border border-collapse border-slate-400 w-full">
-          <thead>
+        <table className="  w-full rounded-tl-lg rounded-tr-lg">
+          <thead className="bg-primary-600 dark:bg-primaryDark-700 text-white">
             <tr className="text-center p-2">
               <th
                 id="checkbox-all"
                 rowSpan={2}
                 colSpan={1}
-                className="border border-collapse border-slate-400 p-2"
+                className=" border-slate-400 border-top-0 p-2 rounded-tl-lg"
               >
                 <input
                   type="checkbox"
@@ -337,13 +336,17 @@ const Home = () => {
               </th>
 
               {availableTableColumns.map(
-                (header) =>
+                (header, index) =>
                   header.isVisible && (
                     <th
                       key={header.key}
                       rowSpan={header.rowSpan}
                       colSpan={header.colSpan}
-                      className="border border-collapse border-slate-400 p-2"
+                      className={`border-slate-400 p-2 ${
+                        availableTableColumns.length - 1 === index
+                          ? "rounded-tr-lg"
+                          : ""
+                      }`}
                     >
                       {header.name}
                     </th>
@@ -360,7 +363,7 @@ const Home = () => {
                   ) && (
                     <th
                       key={`${address.parentKey}-${address.name}`}
-                      className="border border-collapse border-slate-400 p-2"
+                      className=" border-slate-400 p-2"
                     >
                       {address.name}
                     </th>
@@ -370,51 +373,64 @@ const Home = () => {
           </thead>
           <tbody>
             {data.results.length !== 0 ? (
-              data.results.map((data) => {
+              data.results.map((item, index) => {
                 return (
-                  <tr key={data.id} className="text-center p-2 custom-group">
-                    <td className="border border-collapse border-slate-400 p-2">
+                  <tr
+                    key={item.id}
+                    className={`text-center p-2 custom-group even:bg-slate-200 odd:bg-white`}
+                  >
+                    <td className=" border-slate-400 p-2">
                       <input
                         type="checkbox"
                         name="data"
-                        value={data.id}
+                        value={item.id}
                         onChange={handleCheckBox}
-                        checked={dataIdsChecked.includes(data.id)}
+                        checked={dataIdsChecked.includes(item.id)}
                       />
                     </td>
                     {lookUpParentVisibility(
                       "firstName",
                       availableTableColumns
-                    ) && <TableDataRow data={data.firstName} id={data.id}/>}
+                    ) && <TableDataRow data={item.firstName} id={item.id} />}
                     {lookUpParentVisibility(
                       "lastName",
                       availableTableColumns
-                    ) && <TableDataRow data={data.lastName} id={data.id}/>}
+                    ) && <TableDataRow data={item.lastName} id={item.id} />}
                     {lookUpParentVisibility(
                       "phoneNumber",
                       availableTableColumns
-                    ) && <TableDataRow data={data.phoneNumber} id={data.id}/>}
+                    ) && <TableDataRow data={item.phoneNumber} id={item.id} />}
 
                     {lookUpParentVisibility(
                       "deliveryAddress",
                       availableTableColumns
-                    ) && <AddressTableDataRow data={data.deliveryAddress} id={data.id}/>}
+                    ) && (
+                      <AddressTableDataRow
+                        data={item.deliveryAddress}
+                        id={item.id}
+                      />
+                    )}
 
                     {lookUpParentVisibility(
                       "billingAddress",
                       availableTableColumns
-                    ) && <AddressTableDataRow data={data.billingAddress} id={data.id}/>}
+                    ) && (
+                      <AddressTableDataRow
+                        data={item.billingAddress}
+                        id={item.id}
+                      />
+                    )}
 
                     {lookUpParentVisibility(
                       "actions",
                       availableTableColumns
                     ) && (
-                      <td className="border border-collapse border-slate-400 py-2">
+                      <td className="border-l border-collapse border-slate-400 py-2 bg-slate-200">
                         <div className="flex justify-center items-center h-full">
                           <ActionButton
-                            shouldBeFilled={data.isFavorite}
+                            shouldBeFilled={item.isFavorite}
                             title={
-                              data.isFavorite
+                              item.isFavorite
                                 ? "Remove from Favorites"
                                 : "Add to Favorites"
                             }
@@ -423,14 +439,14 @@ const Home = () => {
                             defaultColor={"text-yellow-500"}
                             onHoverColor={"text-yellow-300"}
                             fn={() => {
-                              console.log(`${data.id} adding to favorites...`);
-                              handleFavorite(data.id);
+                              console.log(`${item.id} adding to favorites...`);
+                              handleFavorite(item.id);
                             }}
                           />
                           <ActionButton
-                            shouldBeFilled={data.isBlocked}
+                            shouldBeFilled={item.isBlocked}
                             title={
-                              data.isBlocked
+                              item.isBlocked
                                 ? "Remove from Blocked"
                                 : "Add to Blocked"
                             }
@@ -440,13 +456,13 @@ const Home = () => {
                             onHoverColor={"text-orange-800"}
                             fn={() => {
                               console.log("blocking contact...");
-                              handleBlock(data.id);
+                              handleBlock(item.id);
                             }}
                           />
                           <ActionButton
-                            shouldBeFilled={data.isEmergency}
+                            shouldBeFilled={item.isEmergency}
                             title={
-                              data.isEmergency
+                              item.isEmergency
                                 ? "Remove from Emergency Contacts"
                                 : "Add to Emergency Contacts"
                             }
@@ -456,7 +472,7 @@ const Home = () => {
                             onHoverColor={"text-blue-800"}
                             fn={() => {
                               console.log("adding to emergency contact...");
-                              handleEmergency(data.id);
+                              handleEmergency(item.id);
                             }}
                           />
                           <ActionButton
@@ -466,7 +482,7 @@ const Home = () => {
                             defaultColor={"text-green-700"}
                             onHoverColor={"text-green-800"}
                             fn={() =>
-                              navigate(UPDATE_CONTACT.replace(":id", data.id), {
+                              navigate(UPDATE_CONTACT.replace(":id", item.id), {
                                 state: location.pathname,
                               })
                             }
@@ -478,7 +494,7 @@ const Home = () => {
                             defaultColor={"text-red-700"}
                             onHoverColor={"text-red-800"}
                             fn={() => {
-                              setIdToBeDeleted(data.id);
+                              setIdToBeDeleted(item.id);
                               openModal();
                             }}
                           />

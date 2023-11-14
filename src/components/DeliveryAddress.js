@@ -43,7 +43,7 @@ const DeliveryAddress = ({ formikProps, onBlur }) => {
             id="delivery_houseNo"
             name="delivery_houseNo"
             type="text"
-            className="border-2 p-1 disabled:bg-gray-200"
+            className="border-2 p-1 disabled:bg-gray-200 dark:text-black dark:disabled:bg-gray-400"
             disabled={formikProps.values?.same}
             onBlur={onBlur}
           />
@@ -59,7 +59,7 @@ const DeliveryAddress = ({ formikProps, onBlur }) => {
             id="delivery_street"
             name="delivery_street"
             type="text"
-            className="border-2 p-1 disabled:bg-gray-200"
+            className="border-2 p-1 disabled:bg-gray-200 dark:text-black dark:disabled:bg-gray-400"
             value={formikProps.values.delivery_street}
             disabled={formikProps.values?.same}
             onBlur={onBlur}
@@ -76,7 +76,7 @@ const DeliveryAddress = ({ formikProps, onBlur }) => {
             id="delivery_city"
             name="delivery_city"
             type="text"
-            className="border-2 p-1 disabled:bg-gray-200"
+            className="border-2 p-1 disabled:bg-gray-200 dark:text-black dark:disabled:bg-gray-400"
             disabled={formikProps.values?.same}
             onBlur={onBlur}
           />
@@ -95,7 +95,7 @@ const DeliveryAddress = ({ formikProps, onBlur }) => {
             id="delivery_province"
             name="delivery_province"
             type="text"
-            className="border-2 p-1 disabled:bg-gray-200"
+            className="border-2 p-1 disabled:bg-gray-200 dark:text-black dark:disabled:bg-gray-400"
             disabled={formikProps.values?.same}
             onBlur={onBlur}
           />
@@ -111,7 +111,7 @@ const DeliveryAddress = ({ formikProps, onBlur }) => {
             id="delivery_zipCode"
             name="delivery_zipCode"
             type="text"
-            className="border-2 p-1 disabled:bg-gray-200"
+            className="border-2 p-1 disabled:bg-gray-200 dark:text-black dark:disabled:bg-gray-400"
             disabled={formikProps.values?.same}
             onBlur={onBlur}
           />

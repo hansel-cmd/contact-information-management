@@ -118,19 +118,19 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex h-screen justify-center items-center">
-      <div className="border-2 rounded w-80 sm:w-96 p-5 shadow-lg">
+      <div className="border-2 rounded w-80 sm:w-96 p-5 shadow-lg  dark:bg-primaryDark-700">
         <button>
           <Link to={LOGIN}>
-            <p className="text-4xl group">
+            <p className="text-4xl group dark:text-white">
               <i className="bi bi-arrow-left-circle group-hover:hidden"></i>
               <i className="bi bi-arrow-left-circle-fill hidden group-hover:block"></i>
             </p>
           </Link>
         </button>
-        <h1 className="text-2xl font-bold mb-4 pt-4">
+        <h1 className="text-2xl font-bold mb-4 pt-4 dark:text-white">
           Enter your email address
         </h1>
-        <p className="mb-4 text-gray-500">
+        <p className="mb-4 text-gray-500 dark:text-fontDark-600">
           Enter your email address associated to your account to retrieve your
           password
         </p>
@@ -147,7 +147,7 @@ const ForgotPassword = () => {
           {(props) => (
             <Form>
               <div className="flex flex-col mb-4">
-                <label htmlFor="email" className="mb-1">
+                <label htmlFor="email" className="mb-1 dark:text-fontDark-600">
                   Email
                 </label>
                 <ErrorMessage name="email">
@@ -159,7 +159,7 @@ const ForgotPassword = () => {
                   id="email"
                   type="text"
                   name="email"
-                  className="border-2 p-1 disabled:bg-gray-200"
+                  className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 dark:text-black"
                   disabled={showOthers}
                 />
               </div>
@@ -186,7 +186,7 @@ const ForgotPassword = () => {
 
               <div className={showOthers ? "block" : "hidden"}>
                 <div className="flex flex-col mb-4 relative">
-                  <label htmlFor="password" className="mb-1">
+                  <label htmlFor="password" className="mb-1 dark:text-fontDark-600">
                     New Password
                   </label>
                   <ErrorMessage name="password">
@@ -216,7 +216,7 @@ const ForgotPassword = () => {
                   </div>
                 </div>
                 <div className="flex flex-col mb-4 relative">
-                  <label htmlFor="confirmPassword" className="mb-1">
+                  <label htmlFor="confirmPassword" className="mb-1 dark:text-fontDark-600">
                     Confirm Password
                   </label>
                   <ErrorMessage name="confirmPassword">
@@ -261,7 +261,7 @@ const ForgotPassword = () => {
             </Form>
           )}
         </Formik>
-        <div className="border-x-4 h-1 my-2"></div>
+        <div className="h-1 my-2"></div>
       </div>
 
       <VerifyModal

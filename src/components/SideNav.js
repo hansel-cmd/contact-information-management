@@ -30,7 +30,7 @@ const SideNav = ({ isOpen, handleToggleSideNav, WIDE, NARROW }) => {
     <div
       className={`gap-10 ${
         isOpen ? WIDE : NARROW
-      } h-full flex-initial bg-primary-600 fixed duration-300`}
+      } h-full flex-initial bg-primary-600 dark:bg-primaryDark-700 fixed duration-300`}
     >
       <div className="h-screen relative">
         <NavigationLink
@@ -60,7 +60,7 @@ const SideNav = ({ isOpen, handleToggleSideNav, WIDE, NARROW }) => {
 
       <div className="absolute right-[-10px] top-0 hidden md:block">
         <button
-          className={`bg-primary-700 w-7 h-7 rounded-full hover:bg-blue-900 ${
+          className={`bg-primary-700 dark:bg-accentDark-700 dark:hover:bg-primaryDark-700 w-7 h-7 rounded-full hover:bg-blue-900 ${
             !isOpen ? "rotate-180" : ""
           } duration-300`}
           onClick={handleToggleSideNav}

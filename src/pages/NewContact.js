@@ -5,7 +5,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import { createCombinedSchema } from "../validations/NewContact";
 import { removeExtraSpaces } from "../utils/utilities";
 import Spinner from "../components/Spinner";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import Toast from "../components/Toast";
 import { useToast } from "../hooks/useToast";
@@ -15,6 +15,7 @@ import Modal from "../components/Modal";
 import FileUploadContainer from "../components/FileUploadContainer";
 import NumberField from "../components/NumberField";
 import handleSubmitContact from "../services/handleSubmitContact";
+import { getItem, removeItem } from "../services/localStorage";
 
 const NewContact = () => {
   //binary
@@ -43,12 +44,17 @@ const NewContact = () => {
     );
   };
 
+  useEffect(() => {
+    const oldThumbnail = getItem('oldThumbnail')
+    if (oldThumbnail) removeItem('oldThumbnail')
+  }, [])
+
   const CombinedSchema = createCombinedSchema(profileRef);
 
   return (
     <>
       <PageTitle icon={"bi bi-plus-circle-fill"} title={"New Contact"} />
-      <div className="p-5 shadow-lg border-2 rounded-lg">
+      <div className="p-5 shadow-lg border-2 rounded-lg dark:bg-primaryDark-700 dark:text-fontDark-700">
         <Formik
           initialValues={{
             profile: "",
@@ -112,7 +118,7 @@ const NewContact = () => {
                               id="firstName"
                               name="firstName"
                               type="text"
-                              className="border-2 p-1"
+                              className="border-2 p-1 dark:text-black"
                               onBlur={(e) => {
                                 if (props.dirty && !showDialog) {
                                   setShowDialog(true);
@@ -136,7 +142,7 @@ const NewContact = () => {
                               id="lastName"
                               name="lastName"
                               type="text"
-                              className="border-2 p-1"
+                              className="border-2 p-1 dark:text-black"
                               onBlur={(e) => {
                                 if (props.dirty && !showDialog) {
                                   setShowDialog(true);

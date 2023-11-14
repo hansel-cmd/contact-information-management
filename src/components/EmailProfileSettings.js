@@ -99,8 +99,8 @@ const EmailProfileSettings = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold pt-4">Email Information</h1>
-      <p className="mb-4 text-gray-500">Update your email address</p>
+      <h1 className="text-2xl font-bold pt-4 dark:text-white">Email Information</h1>
+      <p className="mb-4 text-gray-500 dark:text-fontDark-600">Update your email address</p>
       <Formik
         initialValues={{ email: user.email }}
         onSubmit={handleSubmit}
@@ -110,7 +110,7 @@ const EmailProfileSettings = () => {
         {(props) => (
           <Form>
             <div className="flex flex-col mb-4">
-              <label htmlFor="email" className="mb-1">
+              <label htmlFor="email" className="mb-1 dark:text-fontDark-600">
                 Email
               </label>
               <ErrorMessage name="email">
@@ -120,7 +120,7 @@ const EmailProfileSettings = () => {
                 id="email"
                 name="email"
                 type="text"
-                className="border-2 p-1 disabled:bg-gray-200"
+                className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400"
                 disabled={!isEditable}
               />
             </div>
@@ -145,7 +145,7 @@ const EmailProfileSettings = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center justify-center p-2 rounded w-full bg-green-600 hover:bg-green-700 text-white cursor-pointer disabled:bg-green-400"
+                  className="flex items-center justify-center p-2 rounded w-full bg-primary-600 hover:bg-primary-700 text-white cursor-pointer disabled:bg-primary-400"
                   disabled={
                     !props.isValid ||
                     user.email === props.values.email ||

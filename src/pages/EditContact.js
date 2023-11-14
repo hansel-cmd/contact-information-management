@@ -139,7 +139,7 @@ const EditContact = () => {
         </Link>
       </button>
       <PageTitle icon={"bi bi-pencil-fill"} title={"Edit Contact"} />
-      <div className="p-5 shadow-lg border-2 rounded-lg">
+      <div className="p-5 shadow-lg border-2 rounded-lg  dark:bg-primaryDark-700 dark:text-fontDark-700">
         {isLoading ? (
           <div className="h-96 flex items-center justify-center">
             <div className="w-">
@@ -215,7 +215,7 @@ const EditContact = () => {
                               id="firstName"
                               name="firstName"
                               type="text"
-                              className="border-2 p-1"
+                              className="border-2 p-1 dark:text-black"
                               onBlur={(e) => {
                                 if (props.dirty && !showDialog) {
                                   setShowDialog(true);
@@ -239,7 +239,7 @@ const EditContact = () => {
                               id="lastName"
                               name="lastName"
                               type="text"
-                              className="border-2 p-1"
+                              className="border-2 p-1 dark:text-black"
                               onBlur={(e) => {
                                 if (props.dirty && !showDialog) {
                                   setShowDialog(true);

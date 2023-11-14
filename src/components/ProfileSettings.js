@@ -22,9 +22,13 @@ const ProfileSettings = () => {
   };
 
   const areTheSame = (values) => {
+    let phoneNumber = "";
+    if (values.phoneNumber) {
+      phoneNumber = values?.phoneNumber?.replace(/[()\s-]/g, "");
+    }
     return user.first_name === values.firstName &&
-      user.last_name === values.lastName &&
-      user.phone_number === values?.phoneNumber.replace(/[()\s-]/g, "");;
+      user.last_name === values.lastName && 
+      user.phone_number === phoneNumber;
   };
 
   const handleUpdateProfile = async (values, actions) => {
@@ -54,15 +58,15 @@ const ProfileSettings = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold pt-4">Profile Information</h1>
-      <p className="mb-4 text-gray-500">
+      <h1 className="text-2xl font-bold pt-4 dark:text-white">Profile Information</h1>
+      <p className="mb-4 text-gray-500 dark:text-fontDark-600">
         Enter your updated profile information
       </p>
       <Formik
         initialValues={{
           firstName: user.first_name,
           lastName: user.last_name,
-          phoneNumber: formatPhoneNumber(user.phone_number) ?? "",
+          phoneNumber: user.phone_number ? formatPhoneNumber(user.phone_number) : "",
         }}
         onSubmit={handleUpdateProfile}
         enableReinitialize={true}
@@ -72,7 +76,7 @@ const ProfileSettings = () => {
           <Form>
             <div className="flex flex-col lg:flex-row">
               <div className="flex flex-col mb-4 lg:me-4 justify-between w-full flex-wrap">
-                <label htmlFor="firstName" className="mb-1">
+                <label htmlFor="firstName" className="mb-1 dark:text-fontDark-600">
                   First Name
                 </label>
                 <ErrorMessage name="firstName">
@@ -82,12 +86,12 @@ const ProfileSettings = () => {
                   id="firstName"
                   name="firstName"
                   type="text"
-                  className="border-2 p-1 disabled:bg-gray-200"
+                  className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400"
                   disabled={!isEditable}
                 />
               </div>
               <div className="flex flex-col mb-4 lg:me-4 justify-between w-full flex-wrap">
-                <label htmlFor="lastName" className="mb-1">
+                <label htmlFor="lastName" className="mb-1 dark:text-fontDark-600">
                   Last Name
                 </label>
                 <ErrorMessage name="lastName">
@@ -97,13 +101,13 @@ const ProfileSettings = () => {
                   id="lastName"
                   name="lastName"
                   type="text"
-                  className="border-2 p-1 disabled:bg-gray-200"
+                  className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400"
                   disabled={!isEditable}
                 />
               </div>
             </div>
             <div className="flex flex-col mb-4">
-              <label htmlFor="phoneNumber" className="mb-1">
+              <label htmlFor="phoneNumber" className="mb-1 dark:text-fontDark-600">
                 Phone Number
               </label>
               <ErrorMessage name="phoneNumber">
@@ -124,7 +128,7 @@ const ProfileSettings = () => {
               <input
                 type="button"
                 value="Edit Profile"
-                className="p-2 rounded w-full bg-primary-600 hover:bg-primary-700 text-white cursor-pointer"
+                className="p-2 rounded w-full bg-primary-600 hover:bg-primary-700 text-white cursor-pointer "
                 onClick={enableEdit}
               />
             )}
@@ -141,7 +145,7 @@ const ProfileSettings = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center justify-center p-2 rounded w-full bg-green-600 hover:bg-green-700 text-white cursor-pointer disabled:bg-green-400"
+                  className="flex items-center justify-center p-2 rounded w-full bg-primary-600 hover:bg-primary-700 text-white cursor-pointer disabled:bg-primary-400"
                   disabled={
                     !props.isValid ||
                     props.isSubmitting ||

@@ -126,8 +126,8 @@ const Login = () => {
 
   return (
     <div className="flex h-screen justify-center items-center">
-      <div className="border-2 rounded w-80 sm:w-96 p-5 shadow-lg">
-        <h1 className="text-2xl font-bold mb-4 pt-4">
+      <div className="border-2 rounded w-80 sm:w-96 p-5 shadow-lg dark:bg-primaryDark-700">
+        <h1 className="text-2xl font-bold mb-4 pt-4 dark:text-fontDark-700">
           Sign in to your account
         </h1>
         <ErrorMessageContainer
@@ -143,7 +143,7 @@ const Login = () => {
           {(props) => (
             <Form>
               <div className="flex flex-col mb-4">
-                <label htmlFor="username" className="mb-1">
+                <label htmlFor="username" className="mb-1 dark:text-fontDark-600">
                   Username
                 </label>
                 <ErrorMessage name="username">
@@ -157,7 +157,7 @@ const Login = () => {
                 />
               </div>
               <div className="flex flex-col mb-4 relative">
-                <label htmlFor="password" className="mb-1">
+                <label htmlFor="password" className="mb-1 dark:text-fontDark-600">
                   Password
                 </label>
                 <ErrorMessage name="password">
@@ -202,8 +202,8 @@ const Login = () => {
             </Form>
           )}
         </Formik>
-        <div className="border-x-4 h-1 my-2"></div>
-        <div className="border-t-2 pt-4">
+        <div className="h-1 my-2"></div>
+        <div className="border-t-2 pt-4 dark:text-fontDark-600">
           <p>
             Don't have an account yet?
             <span className="text-blue-700 font-semibold ms-1">

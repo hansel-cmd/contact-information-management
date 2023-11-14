@@ -22,8 +22,8 @@ const NavigationLink = ({
           links.map((navigation) => (
             <Link to={navigation.path} key={navigation.path}>
               <li
-                className={`py-2 mx-3 hover:bg-primary-700 rounded-md group cursor-pointer ${
-                  navigation.path === location ? "bg-primary-700" : ""
+                className={`py-2 mx-3 hover:bg-primary-700 dark:hover:bg-accentDark-700 rounded-md group cursor-pointer ${
+                  navigation.path === location ? "bg-primary-700 dark:bg-accentDark-700" : ""
                 }`}
               >
                 <div
@@ -52,7 +52,7 @@ const NavigationLink = ({
           ))
         ) : (
           <li
-            className="py-2 mx-3 hover:bg-primary-700 rounded-md group cursor-pointer"
+            className="py-2 mx-3 hover:bg-primary-700 dark:hover:bg-accentDark-700 rounded-md group cursor-pointer"
             onClick={fn}
           >
             <div

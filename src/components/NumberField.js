@@ -9,7 +9,7 @@ const NumberField = ({field, ...props}) => {
         type="tel"
         format="+63 (###) ###-####"
         mask="_"
-        className="border-2 p-1 disabled:bg-gray-200"
+        className="border-2 p-1 disabled:bg-gray-200 dark:text-black dark:disabled:bg-gray-400"
         placeholder="+63 (xxx) xxx-xxxx"
       />
     );

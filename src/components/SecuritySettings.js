@@ -33,19 +33,22 @@ const SecuritySettings = () => {
       );
       setIcon("bi bi-check-circle-fill text-green-500");
       setMessage("Updated Successfully!");
+      actions.resetForm();
       disableEdit();
     } catch (error) {
       console.log("error updating password", error);
       setIcon("bi bi-x-circle-fill text-red-500");
-      setMessage('Cannot perform action. Please try again later.');
+      setMessage("Cannot perform action. Please try again later.");
     }
     handleShowToast();
   };
 
   return (
     <>
-      <h1 className="text-2xl font-bold pt-4">Security Settings</h1>
-      <p className="mb-4 text-gray-500">
+      <h1 className="text-2xl font-bold pt-4 dark:text-white">
+        Security Settings
+      </h1>
+      <p className="mb-4 text-gray-500 dark:text-fontDark-600">
         Provide your old password and enter a new password
       </p>
       <Formik
@@ -60,7 +63,10 @@ const SecuritySettings = () => {
         {(props) => (
           <Form>
             <div className="flex flex-col mb-4">
-              <label htmlFor="oldPassword" className="mb-1">
+              <label
+                htmlFor="oldPassword"
+                className="mb-1 dark:text-fontDark-600"
+              >
                 Old Password
               </label>
               <ErrorMessage name="oldPassword">
@@ -71,7 +77,7 @@ const SecuritySettings = () => {
                   id="oldPassword"
                   name="oldPassword"
                   type={showPasswordObj["oldPassword"] ? "text" : "password"}
-                  className="border-2 p-1 disabled:bg-gray-200 w-full"
+                  className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 w-full"
                   disabled={!isEditable}
                 />
                 <button
@@ -93,7 +99,7 @@ const SecuritySettings = () => {
               </div>
             </div>
             <div className="flex flex-col mb-4">
-              <label htmlFor="password" className="mb-1">
+              <label htmlFor="password" className="mb-1 dark:text-fontDark-600">
                 Password
               </label>
               <ErrorMessage name="password">
@@ -104,7 +110,7 @@ const SecuritySettings = () => {
                   id="password"
                   name="password"
                   type={showPasswordObj["password"] ? "text" : "password"}
-                  className="border-2 p-1 disabled:bg-gray-200 w-full"
+                  className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 w-full"
                   validate={validatePassword}
                   disabled={!isEditable}
                 />
@@ -127,7 +133,10 @@ const SecuritySettings = () => {
               </div>
             </div>
             <div className="flex flex-col mb-4">
-              <label htmlFor="confirmPassword" className="mb-1">
+              <label
+                htmlFor="confirmPassword"
+                className="mb-1 dark:text-fontDark-600"
+              >
                 Confirm Password
               </label>
               <ErrorMessage name="confirmPassword">
@@ -140,7 +149,7 @@ const SecuritySettings = () => {
                   type={
                     showPasswordObj["confirmPassword"] ? "text" : "password"
                   }
-                  className="border-2 p-1 disabled:bg-gray-200 w-full"
+                  className="border-2 p-1 disabled:bg-gray-200 dark:disabled:bg-gray-400 w-full"
                   validate={validatePassword}
                   disabled={!isEditable}
                 />
@@ -183,7 +192,7 @@ const SecuritySettings = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center justify-center p-2 rounded w-full bg-green-600 hover:bg-green-700 text-white cursor-pointer disabled:bg-green-400"
+                  className="flex items-center justify-center p-2 rounded w-full bg-primary-600 hover:bg-primary-700 text-white cursor-pointer disabled:bg-primary-400"
                   disabled={!props.isValid || props.isSubmitting}
                 >
                   <Spinner isLoading={props.isSubmitting}></Spinner>

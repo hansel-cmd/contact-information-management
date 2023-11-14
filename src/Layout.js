@@ -24,7 +24,7 @@ const Layout = ({ children }) => {
   return (
     <>
       <Navbar></Navbar>
-      <div className="mt-20">
+      <div className="mt-20 dark:bg-fontDark-600 min-h-screen">
         <SideNav
           isOpen={isOpen}
           handleToggleSideNav={handleToggleSideNav}

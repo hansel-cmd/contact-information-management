@@ -24,7 +24,7 @@ function App() {
   const Provider = AuthContext.Provider;
 
   return (
-    <div className="min-h-screen dark:bg-gray-400">
+    <div className="dark:bg-primaryDark-700 ">
       <Provider value={{ user, setUser }}>
         <BrowserRouter>
           <Routes>

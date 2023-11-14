@@ -22,8 +22,8 @@ const NavigationLink = ({
           links.map((navigation) => (
             <Link to={navigation.path} key={navigation.path}>
               <li
-                className={`py-2 mx-3 hover:bg-primary-700 dark:hover:bg-accentDark-700 rounded-md group cursor-pointer ${
-                  navigation.path === location ? "bg-primary-700 dark:bg-accentDark-700" : ""
+                className={`py-2 mx-3 hover:bg-primary-700 dark:hover:bg-accentDark-700 dark:hover:text-white rounded-md group cursor-pointer ${
+                  navigation.path === location ? "bg-primary-700 dark:bg-accentDark-700" : "dark:text-fontDark-600"
                 }`}
               >
                 <div
@@ -56,9 +56,9 @@ const NavigationLink = ({
             onClick={fn}
           >
             <div
-              className={`px-4 flex items-center ${isOpen ? "w-[226px]" : ""}`}
+              className={`px-4 flex items-center dark:text-fontDark-600 dark:group-hover:text-white ${isOpen ? "w-[226px]" : ""}`}
             >
-              <span className="me-4 text-xl">
+              <span className="me-4 text-xl dark:text-fontDark-600">
                 <i
                   className={`bi ${
                     "/sign-out" === location

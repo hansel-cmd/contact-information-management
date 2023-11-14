@@ -17,6 +17,9 @@ import ProtectedRoute from "./ProtectedRoute";
 import IsNotAuthenticated from "./isNotAuthenticated";
 import ContactDetail from "./pages/ContactDetail";
 import { useDarkMode } from "./hooks/useDarkMode";
+import FavoriteContacts from "./pages/FavoriteContacts";
+import BlockedContacts from "./pages/BlockedContacts";
+import EmergencyContacts from "./pages/EmergencyContacts";
 
 function App() {
   const [user, setUser] = useState({});
@@ -43,7 +46,17 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Home />
+                    <FavoriteContacts />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path={route.EMERGENCY_CONTACTS}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <EmergencyContacts />
                   </Layout>
                 </ProtectedRoute>
               }
@@ -53,7 +66,7 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Home />
+                    <BlockedContacts />
                   </Layout>
                 </ProtectedRoute>
               }

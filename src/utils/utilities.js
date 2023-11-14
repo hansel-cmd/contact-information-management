@@ -15,5 +15,14 @@ const formatPhoneNumber = (value) => {
   return formattedValue;
 }
 
+const lookUpParentVisibility = (parentKey, tableHeaders) => {
+  const parent = tableHeaders.find((header) => header.key === parentKey);
+  if (!parent) {
+    return false;
+  }
 
-export  { removeExtraSpaces, formatPhoneNumber };
+  return parent.isVisible;
+};
+
+
+export  { removeExtraSpaces, formatPhoneNumber, lookUpParentVisibility };

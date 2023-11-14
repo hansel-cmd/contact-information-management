@@ -5,299 +5,84 @@ import ActionButton from "../components/ActionButton";
 import TableDataRow from "../components/TableDataRow";
 import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
-import { useEffect, useState } from "react";
-import { TABLE_HEADERS, ADDRESSES } from "../constants/tableConstants";
+import { useState } from "react";
+import { ADDRESSES } from "../constants/tableConstants";
 import { useModal } from "../hooks/useModal";
 import { useLocation, useNavigate } from "react-router";
 import { UPDATE_CONTACT } from "../routes/route";
 import { JUST_DELETE_OPTION } from "../constants/options";
-import {
-  sendDELETERequest,
-  sendGETRequest,
-  sendPUTRequest,
-} from "../services/service";
 import { useToast } from "../hooks/useToast";
 import Toast from "../components/Toast";
+import { useActionTab } from "../hooks/useActionTab";
+import { useFetchContacts } from "../hooks/useFetchContacts";
+import { useContactMethods } from "../hooks/useContactMethods";
+import { useTableMethods } from "../hooks/useTableMethods";
+import { lookUpParentVisibility } from "../utils/utilities";
 
-const lookUpParentVisibility = (parentKey, tableHeaders) => {
-  const parent = tableHeaders.find((header) => header.key === parentKey);
-  if (!parent) {
-    return false;
-  }
-
-  return parent.isVisible;
-};
 
 const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { shouldShowModal, openModal, closeModal } = useModal();
-  const [data, setData] = useState({
-    count: 0,
-    next: null,
-    previous: null,
-    results: [],
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [availableTableColumns, setAvailableTableColumns] =
-    useState(TABLE_HEADERS);
-  const [pageSize, setPageSize] = useState(5);
   const { showToast, handleShowToast } = useToast(3000);
   const [message, setMessage] = useState("");
   const [icon, setIcon] = useState("");
   const [idToBeDeleted, setIdToBeDeleted] = useState(null);
-  const [isDeletingSelected, setIsDeletingSelected] = useState(false);
-  const [query, setQuery] = useState("");
+
+  const {
+    query,
+    dataIdsChecked,
+    availableTableColumns,
+    clearQueryString,
+    handleSearch,
+    handleTableColumnUpdate,
+    setDataIdsChecked,
+  } = useActionTab();
+  const {
+    currentPage,
+    pageSize,
+    data,
+    handlePageSizeSelect,
+    handlePageChange,
+    setData,
+  } = useFetchContacts(query);
   const {
     shouldShowModal: shouldShowModalForSelected,
     openModal: openModalForSelected,
     closeModal: closeModalForSelected,
   } = useModal();
 
-  const handlePageSizeSelect = (e) => {
-    setPageSize(Number(e.target.value));
-  };
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  useEffect(() => {
-    const getContacts = async () => {
-      try {
-        const response = await sendGETRequest(
-          `/search-contacts/?q=${encodeURIComponent(
-            query
-          )}&limit=${pageSize}&page=${currentPage}`
-        );
-        console.log(response.data);
-        setData(response.data);
-      } catch (err) {
-        console.log("contacts error", err);
-        if (err.response?.status === 404) {
-          setCurrentPage(1);
-        }
-      }
-    };
-    getContacts();
-  }, [pageSize, currentPage, data.count, query]);
-
-  const handleTableColumnUpdate = (e) => {
-    const updated = availableTableColumns.map((tableColumn) => {
-      if (tableColumn.key === e.target.name) {
-        return {
-          ...tableColumn,
-          isVisible: e.target.checked,
-        };
-      }
-      return tableColumn;
+  const { handleDelete, handleBlock, handleEmergency, handleFavorite } =
+    useContactMethods({
+      data,
+      idToBeDeleted,
+      pageSize,
+      currentPage,
+      handlePageChange,
+      setData,
+      setIcon,
+      setMessage,
+      handleShowToast,
     });
-    setAvailableTableColumns(updated);
-    console.log(e.target.name, e.target.checked);
-    console.log(updated);
-    console.log("handling table column update...");
-  };
 
-  const [dataIdsChecked, setDataIdsChecked] = useState([]);
-  const handleCheckBox = (e) => {
-    if (e.target.checked) {
-      if (dataIdsChecked.length === data.results.length - 1) {
-        setAreAllChecked(true);
-      }
-      setDataIdsChecked((ids) => [...ids, Number(e.target.value)]);
-    } else {
-      const temp = dataIdsChecked.filter((id) => id !== Number(e.target.value));
-      setDataIdsChecked([...temp]);
-    }
-  };
-
-  const [areAllChecked, setAreAllChecked] = useState(false);
-  const handleCheckAll = (e) => {
-    setAreAllChecked(e.target.checked);
-  };
-
-  useEffect(() => {
-    if (areAllChecked) {
-      const ids = data.results.map((data) => data.id);
-      setDataIdsChecked(ids);
-    } else {
-      setDataIdsChecked([]);
-    }
-  }, [areAllChecked, data.results]);
-
-  const handleSelectedOptions = (method) => {
-    if (method === "delete") openModalForSelected();
-  };
-
-  const handleDeleteSelected = async () => {
-    const countSelected = dataIdsChecked.length;
-
-    try {
-      setIsDeletingSelected(true);
-      await Promise.allSettled(dataIdsChecked.map((id) => handleDelete(id)));
-
-      // data.count is the count of the data before all the deletion
-      const totalPages = Math.ceil(data.count / pageSize);
-      // If we selected all the contacts in this page, and delete them,
-      // and it is the last page, then we go back to the previous page
-      if (countSelected === pageSize && totalPages === currentPage) {
-        handlePageChange(currentPage - 1);
-      }
-    } catch (error) {
-      console.log("error deleting all contacts", error);
-    }
-
-    setIsDeletingSelected(false);
-    closeModalForSelected();
-  };
-
-  const handleFavorite = async (id) => {
-    try {
-      const response = await sendPUTRequest({}, `favorite-contact/${id}/`);
-      if (response.status === 200) {
-        let previousValue = false;
-        // update the state
-        const updatedResults = data.results.map((result) => {
-          if (result.id === id) {
-            previousValue = result.isFavorite;
-            return {
-              ...result,
-              isFavorite: !result.isFavorite,
-            };
-          }
-          return result;
-        });
-
-        setData({ ...data, results: updatedResults });
-        setIcon("bi bi-check-circle-fill text-green-500");
-        setMessage(
-          previousValue === true
-            ? "Removed from Favorites!"
-            : "Added to Favorites!"
-        );
-      }
-    } catch (error) {
-      if (error?.response?.status === 400) {
-        setMessage(error?.response?.data.error);
-      } else {
-        setMessage("Cannot perform action. Please try again later.");
-      }
-      setIcon("bi bi-x-circle-fill text-red-500");
-    }
-
-    handleShowToast();
-  };
-
-  const handleEmergency = async (id) => {
-    try {
-      const response = await sendPUTRequest({}, `emergency-contact/${id}/`);
-      if (response.status === 200) {
-        let previousValue = false;
-        // update the state
-        const updatedResults = data.results.map((result) => {
-          if (result.id === id) {
-            previousValue = result.isEmergency;
-            return {
-              ...result,
-              isEmergency: !result.isEmergency,
-            };
-          }
-          return result;
-        });
-
-        setData({ ...data, results: updatedResults });
-        setIcon("bi bi-check-circle-fill text-green-500");
-        setMessage(
-          previousValue === true
-            ? "Removed from Emergency Contacts!"
-            : "Added to Emergency Contacts!"
-        );
-      }
-    } catch (error) {
-      if (error?.response?.status === 400) {
-        setMessage(error?.response?.data.error);
-      } else {
-        setMessage("Cannot perform action. Please try again later.");
-      }
-      setIcon("bi bi-x-circle-fill text-red-500");
-    }
-
-    handleShowToast();
-  };
-
-  const handleBlock = async (id) => {
-    try {
-      const response = await sendPUTRequest({}, `blocked-contact/${id}/`);
-      if (response.status === 200) {
-        let previousValue = false;
-        // update the state
-        const updatedResults = data.results.map((result) => {
-          if (result.id === id) {
-            previousValue = result.isBlocked;
-            return {
-              ...result,
-              isBlocked: !result.isBlocked,
-            };
-          }
-          return result;
-        });
-
-        setData({ ...data, results: updatedResults });
-        setIcon("bi bi-check-circle-fill text-green-500");
-        setMessage(
-          previousValue === true
-            ? "Removed from Blocked Contacts!"
-            : "Added to Blocked Contacts!"
-        );
-      }
-    } catch (error) {
-      if (error?.response?.status === 400) {
-        setMessage(error?.response?.data.error);
-      } else {
-        setMessage("Cannot perform action. Please try again later.");
-      }
-      setIcon("bi bi-x-circle-fill text-red-500");
-    }
-
-    handleShowToast();
-  };
-
-  const handleDelete = async (selectedId) => {
-    const id = selectedId ?? idToBeDeleted;
-    try {
-      await sendDELETERequest(`delete-contact/${id}/`);
-      const updatedResults = data.results.filter((result) => result.id !== id);
-
-      // If there is 1 contact in the last page, and it was deleted,
-      //  our currentPage should be changed to last page - 1
-      const remainder = data.count % pageSize;
-      const totalPages = Math.ceil(data.count / pageSize);
-      if (remainder === 1 && currentPage === totalPages) {
-        handlePageChange(currentPage - 1);
-      }
-
-      setData({
-        ...data,
-        count: data.count - 1,
-        results: updatedResults,
-      });
-      setIcon("bi bi-check-circle-fill text-green-500");
-      setMessage("Contact is deleted successfully!");
-    } catch (error) {
-      setMessage("Cannot perform action. Please try again later.");
-      setIcon("bi bi-x-circle-fill text-red-500");
-    }
-
-    handleShowToast();
-  };
-
-  const handleSearch = (e) => {
-    setQuery(e.target.value);
-  };
-
-  const clearQueryString = () => {
-    setQuery("");
-  };
+  const {
+    isDeletingSelected,
+    areAllChecked,
+    handleCheckBox,
+    handleCheckAll,
+    handleDeleteSelected,
+    handleSelectedOptions,
+  } = useTableMethods({
+    data,
+    dataIdsChecked,
+    pageSize,
+    currentPage,
+    setDataIdsChecked,
+    handleDelete,
+    handlePageChange,
+    openModalForSelected,
+    closeModalForSelected,
+  });
 
   return (
     <div>

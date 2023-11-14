@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 
 const COLORS = {
-  red: "red",
   teal: "teal",
   orange: "orange",
   purple: "purple",
+  red: "red",
   blue: "blue",
   yellow: "yellow",
   emerald: "emerald",
-  rose: "rose",
   pink: "pink",
-  fuchsia: "fuchsia",
 };
 
 const calculateColorIndex = (char) => {
@@ -22,7 +20,7 @@ const calculateColorIndex = (char) => {
 const getColorByInput = (input) => {
   // Ensure the input string is not empty
   if (!input || input.trim() === "") {
-    return "rose";
+    return "red";
   }
 
   // Extract the first character of the input string
@@ -34,14 +32,17 @@ const getColorByInput = (input) => {
   // Get the color at the calculated index
   const color = Object.keys(COLORS)[colorIndex];
 
-  return color || "rose";
+  return color || "red";
 };
 
 export const useProfileColor = (name) => {
-  const [color, setColor] = useState("rose");
+  const [color, setColor] = useState("red");
 
   useEffect(() => {
-    if (!name) return;
+    if (!name) {
+      setColor("red")
+      return;
+    }
     setColor(getColorByInput(name));
   }, [name]);
 

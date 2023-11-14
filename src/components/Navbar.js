@@ -80,7 +80,7 @@ const Navbar = () => {
           Hello, {user?.first_name}!
         </p>
         <span
-          className={`flex justify-center items-center h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer bg-${color}-800`}
+          className={`flex justify-center items-center h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer bg-${color}-800 `}
           onClick={openOffCanvas}
         >
           <span className="text-white text-xl">

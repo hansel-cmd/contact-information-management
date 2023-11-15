@@ -7,13 +7,11 @@ import { formatPhoneNumber } from "../utils/utilities";
 import { getItem, removeItem } from "../services/localStorage";
 import { sendPOSTRequest } from "../services/service";
 import { LOGIN } from "../routes/route";
-import { useProfileColor } from "../hooks/useProfileColor";
 
 const Navbar = () => {
   const { user, setUser } = useContext(AuthContext);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [showOffCanvas, setShowOffCanvas] = useState(false);
-  const color = useProfileColor(user.first_name);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -80,7 +78,7 @@ const Navbar = () => {
           Hello, {user?.first_name}!
         </p>
         <span
-          className={`flex justify-center items-center h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer bg-${color}-800 `}
+          className={`flex justify-center items-center h-10 w-10 rounded-full overflow-hidden ms-3 cursor-pointer bg-red-800 `}
           onClick={openOffCanvas}
         >
           <span className="text-white text-xl">
@@ -108,7 +106,7 @@ const Navbar = () => {
               <img src={user.profile} alt="" className="w-32 h-32 rounded-lg" />
             ) : (
               <div
-                className={`w-32 min-w-[8rem] h-32 rounded-lg bg-${color}-800 flex justify-center items-center`}
+                className={`w-32 min-w-[8rem] h-32 rounded-lg bg-red-800 flex justify-center items-center`}
               >
                 <span className="text-6xl inline-block text-white">
                   {user.first_name && user?.first_name[0].toUpperCase()}
